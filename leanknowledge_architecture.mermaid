@@ -1,0 +1,205 @@
+%%{ init: { 'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#333333', 'lineColor': '#333333', 'secondaryColor': '#f5f5f5', 'tertiaryColor': '#ffffff', 'background': '#ffffff', 'mainBkg': '#ffffff', 'fontSize': '13px', 'edgeLabelBackground': '#ffffff' }, 'flowchart': { 'curve': 'basis', 'nodeSpacing': 40, 'rankSpacing': 55, 'padding': 15 } } }%%
+
+flowchart TB
+    %% ============================================================
+    %% INPUTS
+    %% ============================================================
+    TEXTBOOK["📘 <b>Textbook PDF</b><br/><i>e.g. MWG</i>"]
+    PAPER["📄 <b>Research Paper</b><br/><i>e.g. Milgrom &amp; Shannon 1994</i>"]
+
+    %% ============================================================
+    %% STAGE 0 — PDF READER
+    %% ============================================================
+    subgraph S0["<b>Stage 0 · PDF Reader Agent</b>&nbsp;&nbsp;&nbsp;<i>Claude API</i>"]
+        direction TB
+        S0_DESC["Read text semantically — identify every<br/>mathematical claim, labeled or unlabeled"]
+        S0_CLAIMS["<b>Claim Objects</b> — each extracted with:"]
+        S0_FIELDS["<b>statement</b> — precise mathematical proposition<br/><b>role</b> — definition · claimed result · invoked dependency · implicit assumption<br/><b>source location</b> — page, section, context in PDF<br/><b>notation in scope</b> — symbols and definitions active at that point"]
+        S0_DESC --> S0_CLAIMS --> S0_FIELDS
+    end
+
+    subgraph S0_EXAMPLES["<b>Example Extractions</b>"]
+        direction LR
+        EX1["<b>Claimed result</b><br/><i>'If ≿ is complete,<br/>then ≿ is reflexive'</i><br/>→ has proof, formalize"]
+        EX2["<b>Invoked dependency</b><br/><i>'by Theorem 4.3<br/>in Rudin...'</i><br/>→ backlog: referenced"]
+        EX3["<b>Implicit assumption</b><br/><i>'the budget set<br/>is compact'</i><br/>→ backlog: unreferenced"]
+        EX4["<b>Definition</b><br/><i>'A relation ≿ is complete<br/>if ∀x,y: x≿y ∨ y≿x'</i><br/>→ encode in Lean"]
+    end
+
+    %% ============================================================
+    %% ROUTER
+    %% ============================================================
+    ROUTER["<b>🔀 Router</b><br/><br/>For each claim, check Tree + <b>ask Librarian</b>:<br/><b>Already formalized?</b> → link, move on<br/><b>Has proof?</b> → queue for pipeline<br/><b>No proof?</b> → take as given, add to backlog"]
+
+    %% ============================================================
+    %% LIBRARIAN AGENT
+    %% ============================================================
+    subgraph LIBRARIAN["<b>📚 Librarian Agent</b>&nbsp;&nbsp;&nbsp;<i>Claude API — permanent</i>"]
+        direction TB
+        LIB_DESC["Given a mathematical statement, determine if an<br/>equivalent result exists in Mathlib or the Knowledge Tree"]
+        LIB_SEARCH["<b>Search layers:</b><br/>1. Exact name search in declaration index<br/>2. Semantic search via Rosetta Stone NL descriptions<br/>3. Type-based search via Loogle / exact? / apply?<br/>4. Module-based browsing by domain"]
+        LIB_OUT["<b>Returns:</b> Lean name · import path · type signature<br/>or 'not found' → claim proceeds normally"]
+        LIB_DESC --> LIB_SEARCH --> LIB_OUT
+    end
+
+    %% ============================================================
+    %% DEPENDENCY BACKLOG
+    %% ============================================================
+    subgraph BL["<b>📋 Dependency Backlog</b>"]
+        direction TB
+        BL_DESC["Prioritized queue of unproved claims<br/>Priority = how many downstream results it unblocks"]
+        BL_CAT["<b>Three categories:</b>"]
+        BL_REF["<b>Referenced Claim</b><br/><i>'by Theorem 4.3 in Rudin'</i><br/>→ Feeder goes directly to source"]
+        BL_UNREF["<b>Unreferenced Claim</b><br/><i>'by a well-known result...'</i><br/>→ Feeder searches for source"]
+        BL_OMIT["<b>Claim with Omitted Proof</b><br/><i>'the reader can verify...'</i><br/>→ hardest — may need construction"]
+        BL_DESC --> BL_CAT
+        BL_CAT --> BL_REF
+        BL_CAT --> BL_UNREF
+        BL_CAT --> BL_OMIT
+    end
+
+    %% ============================================================
+    %% FEEDER AGENT
+    %% ============================================================
+    FEEDER["<b>🔎 Feeder Agent</b><br/><br/>Takes backlog items → finds source proofs<br/>Searches: loaded textbooks · Mathlib docs · references.bib<br/>Feeds source material back into Stage 0<br/><i>Procurement, not formalization</i>"]
+
+    %% ============================================================
+    %% KNOWLEDGE TREE
+    %% ============================================================
+    TREE["<b>🌳 Knowledge Tree</b><br/><br/>Verified Lean theorems + dependency edges<br/>Mathlib cross-references · coverage frontier<br/>Nodes: ✅ verified or 🟡 conditional on backlog items<br/>Resolves backlog entries on match"]
+
+    %% ============================================================
+    %% STAGE 1 — PROOF AGENT
+    %% ============================================================
+    subgraph S1["<b>Stage 1 · Proof Agent</b>&nbsp;&nbsp;&nbsp;<i>Claude API — permanent</i>"]
+        S1_DESC["Claimed result + raw proof → Structured NL proof<br/>Strategy · assumptions · steps · dependencies<br/><i>High reasoning, low volume — always Claude</i>"]
+    end
+
+    %% ============================================================
+    %% STAGE 2 — TRANSLATOR
+    %% ============================================================
+    subgraph S2["<b>Stage 2 · Translator Agent</b>&nbsp;&nbsp;&nbsp;<i>fine-tune target · ≈ AlphaGo policy network</i>"]
+        S2_DESC["Structured NL proof → N candidate Lean 4 translations<br/><i>Prototype: Claude Code</i><br/><i>Production: fine-tuned 7B model trained on Rosetta Stone</i>"]
+    end
+
+    %% ============================================================
+    %% STAGE 3 — VERIFIER / PROOF SEARCH
+    %% ============================================================
+    subgraph S3["<b>Stage 3 · Verifier + Proof Search</b>&nbsp;&nbsp;&nbsp;<i>RL target · ≈ AlphaGo MCTS</i>"]
+        COMPILE["<b>Lean 4 Compiler</b><br/><i>lake build</i>"]
+        ERRORS["<b>Error Classifier</b><br/>type mismatch · missing import<br/>tactic failure · structural error"]
+        REPAIR["<b>Repair / Search Agent</b><br/>Read errors → propose fixes<br/>Explore tactic alternatives"]
+        COMPILE -->|"❌ fail"| ERRORS
+        ERRORS --> REPAIR
+        REPAIR -->|"retry"| COMPILE
+    end
+    VERIFIED["<b>✅ Verified Lean Proof</b>"]
+
+    %% ============================================================
+    %% STAGE 4 — KNOWLEDGE AGENT
+    %% ============================================================
+    subgraph S4["<b>Stage 4 · Knowledge Agent</b>&nbsp;&nbsp;&nbsp;<i>Claude API — permanent</i>"]
+        S4_DESC["Semantic tagging · dependency linking<br/>Mathlib cross-reference · backlog resolution<br/>Add verified pair to Rosetta Stone<br/>Insert node + edges into Knowledge Tree"]
+    end
+
+    %% ============================================================
+    %% ROSETTA STONE
+    %% ============================================================
+    ROSETTA["<b>📖 Rosetta Stone</b>&nbsp;&nbsp;&nbsp;<i>training corpus + Librarian index</i><br/><br/>Verified (NL proof, Lean proof) pairs<br/>Seeded from Mathlib 210k+ theorems<br/>Grows with every successful pipeline run<br/>Each pair tagged with <b>confidence</b>: high · medium · low<br/><i>Serves as training data AND semantic search index for Librarian</i>"]
+
+    %% ============================================================
+    %% TRAINING DATA FLYWHEEL
+    %% ============================================================
+    subgraph TRAINING["<b>🔁 Training Data Flywheel</b>"]
+        direction LR
+        PAIRS["<b>✅ Supervised Pairs</b><br/><i>(NL proof, verified Lean)</i><br/>→ added to Rosetta Stone<br/>→ future: fine-tunes Stage 2"]
+        FAILURES["<b>❌ Failure Triples</b><br/><i>(NL, bad Lean, error type)</i><br/>→ improves Stage 2 &amp; 3"]
+        RL_DATA["<b>🎮 Search Trajectories</b><br/><i>(tactic sequences + rewards)</i><br/>→ future: RL training for Stage 3"]
+    end
+
+    %% ============================================================
+    %% MAIN PIPELINE FLOW
+    %% ============================================================
+    TEXTBOOK ==> S0
+    PAPER ==> S0
+    S0 ==> S0_EXAMPLES
+    S0_EXAMPLES ==> ROUTER
+
+    %% Router consults Librarian
+    ROUTER <-->|"is this in Mathlib<br/>or Knowledge Tree?"| LIBRARIAN
+
+    ROUTER ==>|"has proof"| S1
+    S1 ==> S2
+    S2 ==>|"N candidates"| S3
+    COMPILE ==>|"✅ pass"| VERIFIED
+    VERIFIED ==> S4
+    S4 ==> TREE
+
+    %% Router checks Tree
+    ROUTER <-->|"check coverage"| TREE
+
+    %% Router sends unproved claims to Backlog
+    ROUTER ==>|"no proof"| BL
+
+    %% Backlog → Feeder → Stage 0
+    BL ==> FEEDER
+    FEEDER ==>|"found source"| S0
+
+    %% Librarian consults Rosetta Stone for semantic search
+    LIBRARIAN <-.->|"semantic search<br/>NL → Lean name"| ROSETTA
+
+    %% Librarian assists Translator and Verifier
+    S2 -.->|"need exact Lean name<br/>for dependency"| LIBRARIAN
+    ERRORS -.->|"unknown identifier /<br/>missing import"| LIBRARIAN
+
+    %% Stage 4 resolves backlog + feeds Rosetta Stone
+    S4 -.->|"resolve matching entry"| BL
+    S4 -.->|"add verified pair"| ROSETTA
+
+    %% ============================================================
+    %% TRAINING DATA FLOWS
+    %% ============================================================
+    VERIFIED -.->|"save pair"| PAIRS
+    ERRORS -.->|"save failure"| FAILURES
+    REPAIR -.->|"save trajectory"| RL_DATA
+
+    PAIRS -.->|"future: fine-tune"| S2
+    FAILURES -.->|"future: improve"| S2
+    RL_DATA -.->|"future: RL training"| S3
+
+    %% ============================================================
+    %% STYLING
+    %% ============================================================
+    classDef inputBox fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px,color:#1a1a1a
+    classDef stage0Box fill:#f3e8ff,stroke:#7c3aed,stroke-width:2px,color:#1a1a1a
+    classDef exampleBox fill:#faf5ff,stroke:#9b8ab8,stroke-width:1px,color:#1a1a1a
+    classDef routerBox fill:#f0f0f0,stroke:#555555,stroke-width:2px,color:#1a1a1a
+    classDef librarianBox fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1a1a1a
+    classDef backlogBox fill:#fff0f0,stroke:#c0392b,stroke-width:2px,color:#1a1a1a
+    classDef feederBox fill:#fdf2e9,stroke:#d35400,stroke-width:2px,color:#1a1a1a
+    classDef stage1Box fill:#e6f9ed,stroke:#16a34a,stroke-width:2px,color:#1a1a1a
+    classDef stage2Box fill:#fef9e7,stroke:#d4a017,stroke-width:2px,color:#1a1a1a
+    classDef stage3Box fill:#fde8e8,stroke:#dc2626,stroke-width:2px,color:#1a1a1a
+    classDef verifiedBox fill:#d1fae5,stroke:#059669,stroke-width:3px,color:#1a1a1a
+    classDef stage4Box fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#1a1a1a
+    classDef treeBox fill:#d4edda,stroke:#155724,stroke-width:3px,color:#1a1a1a
+    classDef rosettaBox fill:#fef9e7,stroke:#b7950b,stroke-width:2px,color:#1a1a1a
+    classDef trainingBox fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#1a1a1a
+
+    class TEXTBOOK,PAPER inputBox
+    class S0,S0_DESC,S0_CLAIMS,S0_FIELDS stage0Box
+    class S0_EXAMPLES,EX1,EX2,EX3,EX4 exampleBox
+    class ROUTER routerBox
+    class LIBRARIAN,LIB_DESC,LIB_SEARCH,LIB_OUT librarianBox
+    class BL,BL_DESC,BL_CAT,BL_REF,BL_UNREF,BL_OMIT backlogBox
+    class FEEDER feederBox
+    class S1,S1_DESC stage1Box
+    class S2,S2_DESC stage2Box
+    class S3,COMPILE,ERRORS,REPAIR stage3Box
+    class VERIFIED verifiedBox
+    class S4,S4_DESC stage4Box
+    class TREE treeBox
+    class ROSETTA rosettaBox
+    class TRAINING,PAIRS,FAILURES,RL_DATA trainingBox
+
+    linkStyle default stroke:#333333,stroke-width:2px

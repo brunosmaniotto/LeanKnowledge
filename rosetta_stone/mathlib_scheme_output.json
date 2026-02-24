@@ -1,0 +1,349 @@
+[
+  {
+    "name": "basicOpen_eq_of_affine",
+    "nl_statement": "For a commutative ring R and element f ∈ R, the basic open set in the spectrum scheme Spec(R) corresponding to f equals the basic open set in the prime spectrum of R.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "R is a commutative ring",
+      "f is an element of R"
+    ],
+    "nl_steps": [
+      "Reduce to showing membership equivalence: x ∈ basicOpen(f) in scheme iff x ∈ basicOpen(f) in prime spectrum",
+      "Characterize membership via unit status in the stalk: x ∈ basicOpen(f) iff the germ of f at x is a unit",
+      "Use the isomorphism between stalk and fiber ring to relate units in the localized fiber ring",
+      "Apply the localization criterion at prime ideals: an element is a unit in the localization at a prime iff it is not in the prime ideal"
+    ],
+    "nl_dependencies": [
+      "SetLike.mem_coe",
+      "Scheme.mem_basicOpen_top",
+      "StructureSheaf.stalkToFiberRingHom",
+      "IsLocalization.AtPrime.isUnit_to_map_iff",
+      "PrimeSpectrum.asIdeal"
+    ],
+    "lean_tactics_used": [
+      "ext",
+      "simp",
+      "suffices",
+      "rw"
+    ],
+    "complexity": "moderate",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "germ_eq_zero_of_pow_mul_eq_zero",
+    "nl_statement": "If s^n · f = 0 as global sections on an open U of a scheme X, and x is a point in the basic open of s, then the germ of f at x is zero.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "X is a scheme",
+      "U is an open subspace of X",
+      "x is a point in U",
+      "s and f are global sections on U",
+      "s^n · f = 0 in Γ(X, U)",
+      "x is in the basic open set of s (i.e., s is nonzero at x)"
+    ],
+    "nl_steps": [
+      "Interpret the assumption 'x in basicOpen(s)' as the stalk germ of s^n being a unit in the stalk at x",
+      "Take the n-th power of the unit status of the germ of s",
+      "Use the fact that s^n is a unit to multiply both sides of s^n · f = 0 by its inverse",
+      "Map the resulting equation to the stalk to conclude the germ of f equals zero"
+    ],
+    "nl_dependencies": [
+      "Scheme.mem_basicOpen",
+      "IsUnit.pow",
+      "map_pow",
+      "map_mul",
+      "map_zero"
+    ],
+    "lean_tactics_used": [
+      "rw",
+      "have",
+      "exact"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "Scheme.hom_inv_apply",
+    "nl_statement": "For a scheme isomorphism e: X ≅ Y and a point x ∈ X, applying the inverse morphism to e(x) recovers x.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is an isomorphism of schemes X and Y",
+      "x is a point in X"
+    ],
+    "nl_steps": [
+      "Recognize that e.inv ∘ e.hom equals the identity morphism on X",
+      "Apply this composition to the point x"
+    ],
+    "nl_dependencies": [],
+    "lean_tactics_used": [
+      "change",
+      "simp"
+    ],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "Scheme.inv_hom_apply",
+    "nl_statement": "For a scheme isomorphism e: X ≅ Y and a point y ∈ Y, applying the forward morphism to e.inv(y) recovers y.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is an isomorphism of schemes X and Y",
+      "y is a point in Y"
+    ],
+    "nl_steps": [
+      "Recognize that e.hom ∘ e.inv equals the identity morphism on Y",
+      "Apply this composition to the point y"
+    ],
+    "nl_dependencies": [],
+    "lean_tactics_used": [
+      "change",
+      "simp"
+    ],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "Spec_zeroLocus_eq_zeroLocus",
+    "nl_statement": "For a commutative ring R and a subset s ⊆ R, the zero locus in Spec(R) of the image of s under the global sections isomorphism equals the zero locus of s in the prime spectrum.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "R is a commutative ring",
+      "s is a subset of R"
+    ],
+    "nl_steps": [
+      "Reduce to proving equivalence of membership conditions at each prime ideal x",
+      "Translate: x is in the zero locus iff for all elements of s, their germs vanish at x",
+      "Use the fact that the germ vanishes iff the element is in the corresponding prime ideal"
+    ],
+    "nl_dependencies": [
+      "Spec_carrier",
+      "PrimeSpectrum.mem_zeroLocus",
+      "PrimeSpectrum.mem_basicOpen",
+      "Set.subset_def"
+    ],
+    "lean_tactics_used": [
+      "ext",
+      "suffices",
+      "simp"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "instance_IsLocalHom",
+    "nl_statement": "The stalk map of any scheme morphism f at a point x is a local ring homomorphism.",
+    "nl_strategy": "definition",
+    "nl_assumptions": [
+      "f is a scheme morphism",
+      "x is a point in the domain of f"
+    ],
+    "nl_steps": [
+      "The stalk map is local by definition of scheme morphisms, which require locally ringed space morphisms"
+    ],
+    "nl_dependencies": [],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_comp",
+    "nl_statement": "For composable scheme morphisms f: X → Y and g: Y → Z, the stalk map of the composition equals the composition of the individual stalk maps at corresponding points.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f and g are composable scheme morphisms"
+    ],
+    "nl_steps": [
+      "Reduce to the presheafed space version of composition",
+      "Apply the presheafed space composition law for stalk maps"
+    ],
+    "nl_dependencies": [
+      "PresheafedSpace.stalkMap.comp"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkSpecializes_stalkMap_apply",
+    "nl_statement": "If x specializes to x' in X under the scheme morphism f, then the stalk map respects the specialization map: applying the stalk map commutes with applying the specialization map on the target.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f is a scheme morphism",
+      "x and x' are points in X with x ⤳ x' (x specializes to x')",
+      "y is an element of the stalk at x'"
+    ],
+    "nl_steps": [
+      "Use the commutativity relation stalkSpecializes_stalkMap relating stalk maps and specialization",
+      "Apply function congruence to extract pointwise equality for the element y"
+    ],
+    "nl_dependencies": [
+      "stalkSpecializes_stalkMap",
+      "CommRingCat.hom_ext_iff",
+      "DFunLike.congr_fun"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_congr",
+    "nl_statement": "When two scheme morphisms f and g are equal and points x and x' are equal (with compatible paths), the stalk maps are conjugate by the corresponding stalk congruence isomorphisms.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f = g as scheme morphisms",
+      "x = x' as points in X"
+    ],
+    "nl_steps": [
+      "Reduce to the locally ringed space version of the statement",
+      "Apply the locally ringed space congruence law for stalk maps"
+    ],
+    "nl_dependencies": [
+      "LocallyRingedSpace.stalkMap_congr"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_congr_hom",
+    "nl_statement": "When two scheme morphisms f and g are equal at a fixed point x, the stalk map of f is conjugate to the stalk map of g via stalk congruence.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f = g as scheme morphisms",
+      "x is a fixed point in the domain"
+    ],
+    "nl_steps": [
+      "Reduce to locally ringed space",
+      "Apply the morphism congruence law"
+    ],
+    "nl_dependencies": [
+      "LocallyRingedSpace.stalkMap_congr_hom"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_congr_point",
+    "nl_statement": "When a point in the domain changes from x to x', the stalk maps are conjugate by the stalk congruence isomorphism.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f is a fixed scheme morphism",
+      "x = x' as points in the domain"
+    ],
+    "nl_steps": [
+      "Reduce to the locally ringed space version",
+      "Apply point congruence for stalk maps"
+    ],
+    "nl_dependencies": [
+      "LocallyRingedSpace.stalkMap_congr_point"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_hom_inv",
+    "nl_statement": "For a scheme isomorphism e: X ≅ Y and point y ∈ Y, the composition of the forward stalk map at e.inv(y) with the inverse stalk map at y equals the stalk congruence isomorphism.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is a scheme isomorphism X ≅ Y",
+      "y is a point in Y"
+    ],
+    "nl_steps": [
+      "Reduce to the locally ringed space category",
+      "Apply the isomorphism stalk map composition law"
+    ],
+    "nl_dependencies": [
+      "forgetToLocallyRingedSpace.mapIso",
+      "LocallyRingedSpace.stalkMap_hom_inv"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_hom_inv_apply",
+    "nl_statement": "Pointwise application: For an isomorphism e and element z in the stalk at e.inv(y), applying the inverse stalk map to the forward stalk map of z recovers the stalk congruence applied to z.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is a scheme isomorphism",
+      "y is a point in Y",
+      "z is an element of the stalk at y"
+    ],
+    "nl_steps": [
+      "Use function extensionality on the equality stalkMap_hom_inv",
+      "Extract the pointwise equality for the element z"
+    ],
+    "nl_dependencies": [
+      "stalkMap_hom_inv",
+      "CommRingCat.hom_ext_iff",
+      "DFunLike.congr_fun"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_inv_hom",
+    "nl_statement": "For a scheme isomorphism e: X ≅ Y and point x ∈ X, the composition of the inverse stalk map at e(x) with the forward stalk map at x equals the stalk congruence isomorphism.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is a scheme isomorphism X ≅ Y",
+      "x is a point in X"
+    ],
+    "nl_steps": [
+      "Reduce to the locally ringed space category",
+      "Apply the inverse-forward composition law for stalk maps"
+    ],
+    "nl_dependencies": [
+      "forgetToLocallyRingedSpace.mapIso",
+      "LocallyRingedSpace.stalkMap_inv_hom"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkMap_inv_hom_apply",
+    "nl_statement": "Pointwise application: For an isomorphism e and element y in the stalk at e.hom(x), applying the forward stalk map to the inverse stalk map of y recovers the stalk congruence applied to y.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "e is a scheme isomorphism",
+      "x is a point in X",
+      "y is an element of the stalk at e(x)"
+    ],
+    "nl_steps": [
+      "Use function extensionality on stalkMap_inv_hom",
+      "Extract pointwise equality for the element y"
+    ],
+    "nl_dependencies": [
+      "stalkMap_inv_hom",
+      "CommRingCat.hom_ext_iff",
+      "DFunLike.congr_fun"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "germ_stalkMap",
+    "nl_statement": "For a scheme morphism f: X → Y, an open U ⊆ Y, and point x ∈ X with f(x) ∈ U, the germ map to the stalk of Y composed with the stalk map equals the morphism on sections composed with the germ.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f is a scheme morphism",
+      "U is an open subset of Y",
+      "x is a point in X with f(x) ∈ U"
+    ],
+    "nl_steps": [
+      "Reduce to the presheafed space version of the statement",
+      "Apply the presheafed space compatibility law relating germs and stalk maps"
+    ],
+    "nl_dependencies": [
+      "PresheafedSpace.stalkMap_germ"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  }
+]

@@ -1,0 +1,498 @@
+[
+  {
+    "name": "toBasicOpen_to_map",
+    "nl_statement": "For elements r and f in a commutative ring R, restricting the localized element (the image of f in the localization away from s) to the basic open D(s) equals the constant section f/1 on D(s).",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "s, f are elements of a commutative ring R",
+      "We have the structure sheaf on Spec R"
+    ],
+    "nl_steps": [
+      "Apply the localization lift equality property",
+      "Use the characterization of the toOpen map as a constant section"
+    ],
+    "nl_dependencies": [
+      "IsLocalization.lift_eq",
+      "toOpen_eq_const",
+      "Localization.Away"
+    ],
+    "lean_tactics_used": [
+      "trans"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "toBasicOpen_injective",
+    "nl_statement": "The restriction map toBasicOpen from R to sections of the structure sheaf on D(s) is injective.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f is an element of commutative ring R",
+      "We work with the localization away from f",
+      "The structure sheaf is a sheaf (satisfies descent)"
+    ],
+    "nl_steps": [
+      "Assume two elements s and t map to the same section",
+      "Express both as fractions a/b and c/d using localization",
+      "Observe that equality in the sheaf means they agree on D(f)",
+      "Define the ideal I of all elements r where r(da - bc) = 0",
+      "Show I is indeed an ideal using properties of multiplication",
+      "Prove f is in the radical of I (some power of f nullifies the difference)",
+      "Use the prime spectrum characterization: f is in radical iff it vanishes nowhere on Z(I)",
+      "Conclude that equality in localization implies equality in R by examining prime specializations"
+    ],
+    "nl_dependencies": [
+      "IsLocalization.exists_mk'_eq",
+      "Ideal",
+      "Submonoid.powers",
+      "PrimeSpectrum.vanishingIdeal_zeroLocus_eq_radical",
+      "PrimeSpectrum.mem_vanishingIdeal",
+      "PrimeSpectrum.mem_zeroLocus",
+      "IsLocalization.eq"
+    ],
+    "lean_tactics_used": [
+      "intro",
+      "obtain",
+      "simp",
+      "rw",
+      "let",
+      "dsimp",
+      "contrapose",
+      "exact"
+    ],
+    "complexity": "complex",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "locally_const_basicOpen",
+    "nl_statement": "Any section of the structure sheaf on an open set can be represented as a constant fraction f/g on some basic open neighborhood.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "U is an open set in Spec R",
+      "s is a section over U",
+      "x is a point in U",
+      "Basic opens form a basis of the Zariski topology"
+    ],
+    "nl_steps": [
+      "By definition of the structure sheaf, s is locally a fraction f/g",
+      "Restrict to the basic open containing x (using basis property)",
+      "Refine the denominator g by taking a suitable power (nonzero power ensures basicOpen(h^n) = basicOpen(h))",
+      "Adjust the numerator f by multiplying by the proportionality constant",
+      "Verify compatibility with the restriction map"
+    ],
+    "nl_dependencies": [
+      "exists_const",
+      "PrimeSpectrum.isTopologicalBasis_basic_opens",
+      "PrimeSpectrum.basicOpen_le_basicOpen_iff",
+      "PrimeSpectrum.basicOpen_pow",
+      "res_const",
+      "const_ext"
+    ],
+    "lean_tactics_used": [
+      "obtain",
+      "rw",
+      "simp",
+      "use",
+      "exact",
+      "apply",
+      "ring"
+    ],
+    "complexity": "moderate",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "normalize_finite_fraction_representation",
+    "nl_statement": "Given finitely many fractions a_i/h_i representing a section on a basic open cover, there exists a normalized representation where a_i * h_j = h_i * a_j for all pairs (i,j).",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "U is an open set (specifically basicOpen f)",
+      "t is a finite index set",
+      "a_i and h_i are element sequences indexed by t",
+      "Each pair of fractions a_i/h_i and a_j/h_j agree as sections on the overlap basicOpen(h_i * h_j)"
+    ],
+    "nl_steps": [
+      "For each pair (i,j), extract from localization equality a power (h_i * h_j)^n where the numerators match",
+      "Take the supremum N of all these powers (finitude ensures it exists)",
+      "Multiply numerator a_i by h_i^N and denominator h_i by h_i^(N+1) to normalize",
+      "The identity basicOpen(h_i^(N+1)) = basicOpen(h_i) ensures the morphisms still work",
+      "Verify the normalization condition holds: the adjusted fractions satisfy a'_i * h'_j = h'_i * a'_j",
+      "Check that the new fractions still represent the original section by restricting"
+    ],
+    "nl_dependencies": [
+      "IsLocalization.mk'",
+      "IsLocalization.eq",
+      "Finset.sup",
+      "PrimeSpectrum.basicOpen_pow",
+      "Ideal.mul_mem_right",
+      "const_ext",
+      "res_const",
+      "toBasicOpen_injective"
+    ],
+    "lean_tactics_used": [
+      "intro",
+      "have",
+      "let",
+      "simp",
+      "obtain",
+      "apply",
+      "convert",
+      "use",
+      "ring",
+      "rfl",
+      "refine"
+    ],
+    "complexity": "complex",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "toBasicOpen_surjective",
+    "nl_statement": "The restriction map toBasicOpen from R to sections of the structure sheaf on D(f) is surjective.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "f is an element of commutative ring R",
+      "basicOpen f is compact",
+      "We can cover basicOpen f by finitely many smaller basic opens",
+      "The sheaf property allows gluing local sections"
+    ],
+    "nl_steps": [
+      "Given a section s on basicOpen f, represent it locally as a fraction on each point",
+      "Extract a finite subcover from the compactness of basicOpen f",
+      "Use the normalization lemma to find a consistent representation: a_i/h_i with a_i * h_j = h_i * a_j",
+      "Show that f belongs to the radical of the ideal generated by the h_i (f vanishes nowhere on the basic opens)",
+      "Express f^(n+1) as a linear combination of the h_i with coefficients b_i",
+      "The preimage of s is the fraction (∑ b_i * a_i) / f^(n+1)",
+      "Verify this preimage restricts to s on each basic open using the normalized condition and the sheaf property"
+    ],
+    "nl_dependencies": [
+      "locally_const_basicOpen",
+      "PrimeSpectrum.isCompact_basicOpen",
+      "normalize_finite_fraction_representation",
+      "PrimeSpectrum.vanishingIdeal_zeroLocus_eq_radical",
+      "PrimeSpectrum.zeroLocus_span",
+      "PrimeSpectrum.basicOpen_eq_zeroLocus_compl",
+      "Ideal.span",
+      "Finsupp.linearCombination_apply_of_mem_supported",
+      "IsLocalization.mk'",
+      "Sheaf.eq_of_locally_eq'",
+      "res_const",
+      "const_ext"
+    ],
+    "lean_tactics_used": [
+      "intro",
+      "let",
+      "choose",
+      "obtain",
+      "simp",
+      "rw",
+      "apply",
+      "exact",
+      "rintro",
+      "change",
+      "dsimp",
+      "ring"
+    ],
+    "complexity": "complex",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "isIso_toBasicOpen",
+    "nl_statement": "The map toBasicOpen is an isomorphism of commutative rings (equivalently, a ring equivalence in the categorical sense).",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "toBasicOpen is injective",
+      "toBasicOpen is surjective",
+      "Ring isomorphisms are detected by the forget functor to sets"
+    ],
+    "nl_steps": [
+      "Use the injectivity and surjectivity results to establish bijectivity",
+      "Apply the criterion that a ring homomorphism is an isomorphism iff its underlying set map is bijective",
+      "Use the fact that the forgetful functor from CommRingCat to Set reflects isomorphisms"
+    ],
+    "nl_dependencies": [
+      "toBasicOpen_injective",
+      "toBasicOpen_surjective",
+      "isIso_iff_bijective",
+      "isIso_of_reflects_iso",
+      "forget"
+    ],
+    "lean_tactics_used": [
+      "haveI",
+      "infer_instance"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "stalkAlgebra",
+    "nl_statement": "The stalk of the structure sheaf at a prime ideal p has a natural R-algebra structure inherited from the localization map toStalk.",
+    "nl_strategy": "definition",
+    "nl_assumptions": [
+      "p is a prime spectrum point (prime ideal)",
+      "The stalk inherits the ring structure and R-action from toStalk"
+    ],
+    "nl_steps": [
+      "Extract the algebra structure from the underlying ring homomorphism of toStalk"
+    ],
+    "nl_dependencies": [
+      "toStalk",
+      "Algebra"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "IsLocalization.to_stalk",
+    "nl_statement": "The stalk of the structure sheaf at a prime p is canonically isomorphic to the localization of R at the prime ideal p.asIdeal.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "p is a prime spectrum point",
+      "stalkIso provides a ring isomorphism between the stalk and Localization.AtPrime",
+      "Localization.AtPrime is the standard localization at a prime ideal"
+    ],
+    "nl_steps": [
+      "Use the localization characterization: a ring with a localization-like map satisfies the universal property",
+      "Transport the IsLocalization instance via the ring equivalence stalkIso",
+      "Verify the algebra maps are compatible after transport"
+    ],
+    "nl_dependencies": [
+      "IsLocalization.isLocalization_iff_of_ringEquiv",
+      "stalkIso",
+      "Localization.AtPrime",
+      "Localization.isLocalization",
+      "stalkAlgebra_map",
+      "toStalk_comp_stalkToFiberRingHom",
+      "Iso.eq_comp_inv"
+    ],
+    "lean_tactics_used": [
+      "convert",
+      "apply",
+      "Algebra.algebra_ext",
+      "intro",
+      "rw",
+      "congr",
+      "change"
+    ],
+    "complexity": "moderate",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "openAlgebra",
+    "nl_statement": "Sections of the structure sheaf over an open set U have a natural R-algebra structure inherited from the localization map toOpen.",
+    "nl_strategy": "definition",
+    "nl_assumptions": [
+      "U is an open set in Spec R",
+      "toOpen provides the localization-like map from R to sections over U"
+    ],
+    "nl_steps": [
+      "Extract the algebra structure from the underlying ring homomorphism of toOpen"
+    ],
+    "nl_dependencies": [
+      "toOpen",
+      "Algebra"
+    ],
+    "lean_tactics_used": [],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "IsLocalization.to_basicOpen",
+    "nl_statement": "Sections of the structure sheaf over a basic open D(r) form the localization of R away from r, i.e., R[1/r].",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "r is an element of R",
+      "basicOpenIso provides a ring isomorphism between sections on D(r) and Localization.Away r",
+      "Localization.Away r is the localization inverting all powers of r"
+    ],
+    "nl_steps": [
+      "Use the localization characterization via ring equivalence",
+      "Transport the IsLocalization instance from Localization.Away via basicOpenIso",
+      "Verify the algebra map is correctly identified via localization_toBasicOpen"
+    ],
+    "nl_dependencies": [
+      "IsLocalization.isLocalization_iff_of_ringEquiv",
+      "basicOpenIso",
+      "Localization.Away",
+      "Localization.isLocalization",
+      "localization_toBasicOpen",
+      "Algebra.algebra_ext"
+    ],
+    "lean_tactics_used": [
+      "convert",
+      "apply",
+      "Algebra.algebra_ext",
+      "intro",
+      "congr",
+      "exact"
+    ],
+    "complexity": "moderate",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "to_basicOpen_epi",
+    "nl_statement": "The restriction map from R to sections on a basic open D(r) is epic (surjective in the categorical sense).",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "r is an element of R",
+      "toOpen R (basicOpen r) is injective with respect to the localization structure"
+    ],
+    "nl_steps": [
+      "To show a ring homomorphism is epic, show that if two maps agree after composing with it, they are equal",
+      "Use the ring extension criterion: equality in a localization is detected by the localization property",
+      "Apply the injectivity of the ring homomorphism in the localization"
+    ],
+    "nl_dependencies": [
+      "toOpen",
+      "CommRingCat.hom_ext",
+      "IsLocalization.ringHom_ext",
+      "Submonoid.powers"
+    ],
+    "lean_tactics_used": [
+      "exact",
+      "CommRingCat.hom_ext",
+      "IsLocalization.ringHom_ext"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "to_global_factors",
+    "nl_statement": "The global sections map toOpen R ⊤ factors through the localization away from 1, which is just R itself.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "The localization away from 1 is canonically isomorphic to R",
+      "basicOpen 1 equals the entire spectrum"
+    ],
+    "nl_steps": [
+      "Express toOpen R ⊤ as the composition of three maps: R → R[1/1] → sections on basicOpen 1 → sections on ⊤",
+      "Observe that R[1/1] = R, so the first factor is an identity",
+      "Show the second factor is toBasicOpen R 1",
+      "Show the third factor is the restriction map from basicOpen 1 to ⊤ (the whole space)"
+    ],
+    "nl_dependencies": [
+      "localization_toBasicOpen",
+      "toOpen_res",
+      "PrimeSpectrum.basicOpen_one"
+    ],
+    "lean_tactics_used": [
+      "rw",
+      "change"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "isIso_to_global",
+    "nl_statement": "The global sections map from R to the structure sheaf's global sections is an isomorphism.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "The localization away from 1 is the entire ring R (isomorphic)",
+      "Localization at 1 is an isomorphism",
+      "toBasicOpen R 1 is an isomorphism"
+    ],
+    "nl_steps": [
+      "Decompose toOpen R ⊤ using to_global_factors",
+      "Show the localization away from 1 is an isomorphism (Localization.atOne)",
+      "Show toBasicOpen R 1 is an isomorphism (isIso_toBasicOpen)",
+      "Compose isomorphisms to conclude toOpen R ⊤ is an isomorphism"
+    ],
+    "nl_dependencies": [
+      "CommRingCat.ofHom",
+      "IsLocalization.atOne",
+      "toRingEquiv",
+      "toCommRingCatIso",
+      "to_global_factors",
+      "isIso_toBasicOpen"
+    ],
+    "lean_tactics_used": [
+      "let",
+      "haveI",
+      "rw",
+      "infer_instance"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "globalSectionsIso_hom",
+    "nl_statement": "The homomorphism component of the global sections isomorphism is exactly the map toOpen R ⊤.",
+    "nl_strategy": "definition",
+    "nl_assumptions": [
+      "globalSectionsIso R is the ring equivalence between R and global sections"
+    ],
+    "nl_steps": [
+      "This is definitional — by construction of globalSectionsIso, its hom component is toOpen R ⊤"
+    ],
+    "nl_dependencies": [
+      "toOpen",
+      "globalSectionsIso"
+    ],
+    "lean_tactics_used": [
+      "rfl"
+    ],
+    "complexity": "trivial",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "toStalk_stalkSpecializes",
+    "nl_statement": "The localization map toStalk is natural with respect to specialization: if x specializes to y, the toStalk maps commute with stalk specialization.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "x and y are points in Spec R with x specializing to y (x ⤳ y)",
+      "stalkSpecializes is the induced map on stalks corresponding to specialization"
+    ],
+    "nl_steps": [
+      "Unpack the definition of toStalk in terms of toOpen and the germ map",
+      "Apply simplification lemmas that show the diagram commutes"
+    ],
+    "nl_dependencies": [
+      "toStalk",
+      "toOpen_germ",
+      "stalkSpecializes"
+    ],
+    "lean_tactics_used": [
+      "dsimp",
+      "simp"
+    ],
+    "complexity": "simple",
+    "related_economics_concepts": []
+  },
+  {
+    "name": "localizationToStalk_stalkSpecializes",
+    "nl_statement": "The localization-to-stalk map is natural with respect to specialization: specialization pulls back to localization maps via the localizationMapOfSpecializes.",
+    "nl_strategy": "direct",
+    "nl_assumptions": [
+      "x and y are points in Spec R with x ⤳ y",
+      "localizationToStalk is the composition of toStalk with a localization isomorphism",
+      "localizationMapOfSpecializes extends localization maps along specialization"
+    ],
+    "nl_steps": [
+      "Work with ring homomorphisms by using extensionality at the localization level",
+      "Apply the localization extendability criterion: equality of ring maps at localizations is detected by equality on the localization",
+      "Compose the three localization lifts (for the intermediate structures)",
+      "Use the commutativity of toStalk with stalk specialization to conclude"
+    ],
+    "nl_dependencies": [
+      "localizationToStalk",
+      "stalkSpecializes",
+      "PrimeSpectrum.localizationMapOfSpecializes",
+      "IsLocalization.ringHom_ext",
+      "IsLocalization.lift_comp",
+      "toStalk_stalkSpecializes"
+    ],
+    "lean_tactics_used": [
+      "ext",
+      "apply",
+      "IsLocalization.ringHom_ext",
+      "rw",
+      "CommRingCat.hom_comp",
+      "RingHom.comp_assoc",
+      "dsimp",
+      "IsLocalization.lift_comp",
+      "exact",
+      "CommRingCat.hom_ext_iff"
+    ],
+    "complexity": "moderate",
+    "related_economics_concepts": []
+  }
+]

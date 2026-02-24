@@ -1,0 +1,52 @@
+{
+  "American Economic Review": {
+    "id": "https://openalex.org/S23254222",
+    "display_name": "American Economic Review",
+    "works_count": 10067
+  },
+  "Econometrica": {
+    "id": "https://openalex.org/S95464858",
+    "display_name": "Econometrica",
+    "works_count": 7265
+  },
+  "Journal of Political Economy": {
+    "id": "https://openalex.org/S95323914",
+    "display_name": "Journal of Political Economy",
+    "works_count": 15840
+  },
+  "Quarterly Journal of Economics": {
+    "id": "https://openalex.org/S203860005",
+    "display_name": "The Quarterly Journal of Economics",
+    "works_count": 6687
+  },
+  "Review of Economic Studies": {
+    "id": "https://openalex.org/S88935262",
+    "display_name": "The Review of Economic Studies",
+    "works_count": 4229
+  },
+  "Journal of Economic Theory": {
+    "id": "https://openalex.org/S149131268",
+    "display_name": "Journal of Economic Theory",
+    "works_count": 6217
+  },
+  "Games and Economic Behavior": {
+    "id": "https://openalex.org/S94044085",
+    "display_name": "Games and Economic Behavior",
+    "works_count": 4251
+  },
+  "Theoretical Economics": {
+    "id": "https://openalex.org/S10997704",
+    "display_name": "Theoretical Economics",
+    "works_count": 703
+  },
+  "International Journal of Game Theory": {
+    "id": "https://openalex.org/S132210109",
+    "display_name": "International Journal of Game Theory",
+    "works_count": 1947
+  },
+  "Journal of Mathematical Economics": {
+    "id": "https://openalex.org/S202934171",
+    "display_name": "Journal of Mathematical Economics",
+    "works_count": 3011
+  }
+}
