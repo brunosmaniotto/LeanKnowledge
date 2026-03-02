@@ -10,7 +10,7 @@ from transformers import (
     BitsAndBytesConfig,
     TrainingArguments,
     Trainer,
-    DataCollatorForLanguageModeling
+    DataCollatorForSeq2Seq
 )
 from peft import (
     LoraConfig,
@@ -71,7 +71,7 @@ def main():
     )
     
     tokenizer = AutoTokenizer.from_pretrained(args.base_model, trust_remote_code=True)
-    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.pad_token = tokenizer.eos_token  # Required: default pad_token_id may be at embedding boundary
     
     # 3. LoRA Setup
     model = prepare_model_for_kbit_training(model)
@@ -104,30 +104,12 @@ def main():
             full_texts,
             truncation=True,
             max_length=args.max_seq_len,
-            padding="max_length"
+            # No padding here — DataCollatorForSeq2Seq pads dynamically per batch
         )
-        
-        tokenized["labels"] = tokenized["input_ids"].copy()
-        
-        # Masking input (optional but recommended):
-        # Find the start of "### Lean 4 Code" and mask everything before it.
-        # This is a bit tricky with tokenization boundaries.
-        # Simpler approach: Training on prompt is not fatal, just slightly less efficient.
-        # Given this is a custom script without trl, we'll proceed with full CLM for now unless
-        # we implement custom masking logic.
-        
-        # Masking padding tokens
-        for i, input_id in enumerate(tokenized["input_ids"]):
-            # Set labels to -100 where input is padding
-            # Note: tokenizer.pad_token_id might be eos_token_id, be careful
-            # attention_mask is 0 for padding
-            if "attention_mask" in tokenized:
-                mask = tokenized["attention_mask"][i]
-                labels = tokenized["labels"][i]
-                for j, m in enumerate(mask):
-                    if m == 0:
-                        labels[j] = -100
-                        
+
+        # Labels = input_ids; collator will pad with -100
+        tokenized["labels"] = [ids[:] for ids in tokenized["input_ids"]]
+
         return tokenized
 
     print("Tokenizing dataset...")
@@ -147,10 +129,10 @@ def main():
         learning_rate=args.lr,
         fp16=True,
         logging_steps=10,
-        evaluation_strategy="steps",
-        eval_steps=100,
+        eval_strategy="steps",
+        eval_steps=500,
         save_strategy="steps",
-        save_steps=100,
+        save_steps=500,
         save_total_limit=3,
         load_best_model_at_end=False, # Often False for LoRA to avoid OOM or loading issues
         report_to="wandb",
@@ -163,7 +145,7 @@ def main():
         args=training_args,
         train_dataset=tokenized_datasets["train"],
         eval_dataset=tokenized_datasets["validation"],
-        data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False),
+        data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True, label_pad_token_id=-100),
     )
     
     print("Starting training...")

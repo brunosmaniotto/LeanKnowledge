@@ -12,7 +12,8 @@ WORK=/scratch/public/brunosmaniotto/leanknowledge
 export HF_HOME=/scratch/public/brunosmaniotto/.cache/huggingface
 export PYTHONPATH=$WORK/training:$PYTHONPATH
 
-module load python cuda
+module load python
+# Note: no cuda module on this cluster; torch 2.6.0 bundles CUDA 12.6
 
 # Ensure output directories exist
 mkdir -p $WORK/training/results
