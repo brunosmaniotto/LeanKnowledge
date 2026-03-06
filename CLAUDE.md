@@ -2,136 +2,83 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Repository Layout
 
-LeanKnowledge is an LLM-powered pipeline that formalizes mathematical theorems from textbooks/papers into verified Lean 4 code and organizes them into a knowledge graph. See [ARCHITECTURE.md](ARCHITECTURE.md) for full system design.
+This repo has two top-level directories:
+- **`Current/`** — Active codebase (clean rebuild, March 2026). All new work goes here.
+- **`Previous/`** — Old codebase kept as reference material. Do not modify.
 
-## Build & Run Commands
+All commands below assume `Current/` as the working directory unless stated otherwise.
 
-### Python
+## Build & Test Commands
+
 ```bash
-uv sync                    # Install Python dependencies
-leanknowledge extract --pdf FILE --start-page N --end-page N --domain DOMAIN [--source LABEL]
-leanknowledge status       # Show backlog state
-leanknowledge next         # Formalize next ready item
-leanknowledge run          # Formalize all ready items
-leanknowledge feed         # Run Feeder agent on blocked backlog items
-leanknowledge formalize --name NAME --statement STMT --domain DOMAIN  # Single theorem, bypasses backlog
-leanknowledge migrate      # Migrate JSON → SQLite (opt-in dual-write)
+# Python is at /c/Python313/python.exe — no uv available, use python directly
+/c/Python313/python.exe -m pip install -e "Current/[test]"    # Install with test deps
+/c/Python313/python.exe -m pytest Current/tests/ -q           # Run all tests (~61 tests)
+/c/Python313/python.exe -m pytest Current/tests/test_triage.py -q           # Single test file
+/c/Python313/python.exe -m pytest Current/tests/test_triage.py::test_name -q  # Single test
 ```
 
-### Training
-```bash
-# Prepare data (splits Rosetta Stone into train/val/test)
-python training/prepare_data.py --pairs_dir rosetta_stone/pairs --output_dir training/data
+Package is defined in `Current/pyproject.toml` (hatchling build backend, source in `Current/src/leanknowledge/`). Requires Python 3.12+. Core deps: pydantic, pymupdf, litellm. Optional: `google-cloud-documentai` (for Tier 2 PDF extraction).
 
-# Train QLoRA adapter (on server with GPU)
-python training/train_translator.py --base_model Goedel-LM/Goedel-Prover-V2-8B
+## Architecture
 
-# Evaluate
-python training/eval_translator.py --adapter_path training/adapters/translator_v0
+LeanKnowledge is a multi-agent pipeline that reads mathematical texts, extracts claims, and produces verified Lean 4 proofs. Full design doc: `Current/ARCHITECTURE.md`.
 
-# SLURM submission
-sbatch training/slurm_train.sh
-sbatch training/slurm_eval.sh
+### Pipeline flow (agents 1-6, sequential)
+
+```
+PDF → Agent 1 (Extraction) → text
+    → Agent 2 (Claim Extraction) → structured claims
+    → Agent 3 (Triage) → classified inbox (DEFINITION / THEOREM)
+    → Agent 4 (Librarian) → deduplicated backlog
+    → Agent 5 (Proof Structurer) → structured proof plan
+    → Agent 6 (Translator) → Lean 4 code (with compiler feedback loop)
 ```
 
-### Rosetta Stone Corpus
-```bash
-# Single module
-python3 rosetta_stone/generate.py --module Mathlib.Order.Defs --mathlib-root .lake/packages/mathlib --output rosetta_stone/pairs/output.json
+### Agent implementation patterns
 
-# All submodules (batch processing with resume)
-python3 rosetta_stone/generate.py --module Mathlib.Order --mathlib-root .lake/packages/mathlib --all-submodules --resume --pairs-dir rosetta_stone/pairs
+All agents follow the same pattern: a class with one main method, using LLM calls from `llm.py` or the Anthropic SDK directly. Prompts live in `Current/prompts/*.md` and are loaded at module level via `PROMPT_PATH`.
 
-# Extract-only (no Claude calls, just parse declarations)
-python3 rosetta_stone/generate.py --module Mathlib.Order.Defs --mathlib-root .lake/packages/mathlib --output out.json --extract-only
+| Agent | File | LLM? | Key design choice |
+|-------|------|------|-------------------|
+| 1 - Extraction | `agents/extraction.py` | Yes (Anthropic SDK direct) | Two-tier PDF: PyMuPDF → Google DocAI escalation via quality gate (`pdf_quality.py`) |
+| 2 - Claim Extraction | `agents/claim_extraction.py` | Yes (LiteLLM) | Ensemble: Sonnet + DeepSeek in parallel, Opus arbiter on disagreement |
+| 3 - Triage | `agents/triage.py` | No | Fully deterministic type/role mapping. Defines `ItemCategory`, `InboxItem`, `Inbox` |
+| 4 - Librarian | `agents/librarian.py` | No | Pluggable `Library` interface. `InMemoryLibrary` for tests, semantic search planned |
+| 5 - Proof Structurer | `agents/proof_structurer.py` | Yes (LiteLLM) | Thin wrapper — intelligence lives in `prompts/proof_structurer.md` |
+| 6 - Translator | `agents/translator.py` | Yes (LiteLLM) | 5x DeepSeek → 5x Opus escalation. Full attempt history carried forward. Pluggable `LeanCompiler` interface |
 
-# Rebuild index from existing pairs
-python3 rosetta_stone/generate.py --build-index --pairs-dir rosetta_stone/pairs
-```
+### Key modules
 
-### Lean 4
-```bash
-lake update                # Download/update Mathlib
-lake build                 # Compile LeanProject
-lake env lean FILE         # Compile a single .lean file with Mathlib access
-```
+- **`schemas.py`** — All Pydantic data contracts: `ExtractedItem`, `ExtractionResult`, `StructuredProof`, `ProofStep`, etc. Shared across all agents.
+- **`llm.py`** — Unified LiteLLM gateway. `complete()` for text, `complete_json()` for JSON. Three model tiers configured via env vars.
+- **`backlog.py`** — Work queue. `BacklogEntry` tracks status (PENDING → IN_PROGRESS → COMPLETED/FAILED/AXIOMATIZED) and `DependencyInfo` for axiomatized stubs.
 
-## Testing
-```bash
-uv run pytest tests/ -q    # 37+ tests
-```
+### LLM model routing
 
-## Key File Paths
+All LiteLLM calls use env vars with defaults:
 
-### Pipeline Core
-- `src/leanknowledge/pipeline.py` — Orchestrator: chains all stages, CLI entrypoints
-- `src/leanknowledge/schemas.py` — Pydantic models for all inter-stage data contracts
-- `src/leanknowledge/backlog.py` — Persistent work queue with dependency-aware scheduling (JSON + optional SQLite)
-- `src/leanknowledge/router.py` — Claim dispatch (checks Librarian, routes to pipeline or backlog)
-- `src/leanknowledge/claude_client.py` — Anthropic SDK wrapper with prompt caching, usage tracking, batch API
-- `src/leanknowledge/deepseek_client.py` — DeepSeek API alternative backend
-- `src/leanknowledge/llm_gateway.py` — LiteLLM gateway (opt-in via `LK_USE_GATEWAY=1`)
+| Env var | Default | Used by |
+|---------|---------|---------|
+| `LK_MODEL_FAST_A` | `anthropic/claude-sonnet-4-20250514` | Agent 2 ensemble |
+| `LK_MODEL_FAST_B` | `deepseek/deepseek-reasoner` | Agent 2 ensemble, Agent 6 Tier 1 |
+| `LK_MODEL_HEAVY` | `anthropic/claude-opus-4-20250115` | Agent 2 arbiter, Agent 5, Agent 6 Tier 2 |
 
-### Agents
-- `agents/extraction.py` — Stage 0: text → ExtractedItem (Marker pre-converts PDF → markdown; agent is text-only)
-- `agents/proof.py` — Stage 1: theorem → StructuredProof
-- `agents/translator.py` — Stage 2: StructuredProof → LeanCode (accepts tactic hints from Strategy KB)
-- `agents/verifier.py` — Stage 3: compile-repair loop (max 6 iterations, tactic hints on re-translation)
-- `agents/knowledge.py` — Stage 4: deterministic tagging (no LLM calls)
-- `agents/librarian.py` — RAG search: embedding → BM25 → Claude Haiku
-- `agents/resolver.py` — Tier 2: heavy-model loop for axiomatized failures
-- `agents/feeder.py` — Procurement agent for blocked backlog items (with citation graph suggestions)
+Agent 1 (Extraction) uses the Anthropic SDK directly with `LK_EXTRACTION_MODEL` (default: `claude-sonnet-4-20250514`).
 
-### Lean Integration
-- `lean/compiler.py` — Lean 4 compiler interface (`lake env lean`)
-- `lean/errors.py` — Error parsing and classification
-- `lean/repair_db.py` — 3-tier deterministic repair patterns
-- `lean/repl.py` — Cached Lean environment (skips Lake overhead per compilation)
+### What's not built yet
 
-### Search Infrastructure
-- `src/leanknowledge/embedding_index.py` — Sentence-transformer embedding search
-- `src/leanknowledge/librarian_index.py` — BM25 search index (Rosetta Stone + pipeline pairs)
-- `src/leanknowledge/loogle_client.py` — Loogle API client (type-based Mathlib search, no LLM)
+- Pipeline orchestrator / CLI entrypoints
+- Agent 7 (Knowledge Agent): reference graph + strategy DB
+- Dependency resolution (BLOCKED/READY status)
+- Real Lean compiler integration (`LeanCompiler` is an interface only)
+- Semantic search for Librarian (currently text similarity)
 
-### Storage & Data
-- `src/leanknowledge/storage.py` — SQLite backend (dual-write with JSON)
-- `src/leanknowledge/strategy_kb.py` — Strategy Knowledge Base (221K entries, wired into Proof/Translator/Verifier)
-- `src/leanknowledge/citation_suggestions.py` — Citation graph paper suggestions for Feeder
+## Conventions
 
-### Training
-- `training/train_translator.py` — QLoRA training (Goedel-Prover-V2-8B base)
-- `training/prepare_data.py` — Data splitting (90/5/5, stratified by complexity)
-- `training/data_loader.py` — Rosetta Stone → HuggingFace Dataset loader
-- `training/eval_translator.py` — Evaluation harness (pass@1, pass@k with Lean compiler)
-- `training/train_repair.py` — DPO repair adapter (stub)
-
-### Other
-- `prompts/*.md` — Agent prompt templates
-- `rosetta_stone/generate.py` — Mathlib NL-Lean pair generator
-- `scripts/run_mwg_batch.py` — MWG batch extraction runner
-- `scripts/triage_backlog.py` — Reset stuck IN_PROGRESS/FAILED items
-- `scripts/setup_models.py` — Download Goedel-Prover-V2-8B from HuggingFace
-
-## Key Technical Details
-
-- **Python 3.12+**, managed with `uv`. Build backend: hatchling. Package source is `src/leanknowledge/`.
-- **Lean 4 v4.27.0** with **Mathlib v4.27.0**. Version pinned in `lean-toolchain`.
-- Lake project config in `lakefile.toml`: `relaxedAutoImplicit = false`, Mathlib linter enabled.
-- `elan` (Lean version manager) expected at `~/.elan/bin`. The compiler prepends this to PATH.
-- All agent prompts are in `prompts/`: `extraction_agent.md`, `proof_agent.md`, `lean_translation.md`, `knowledge_agent.md`, `resolver.md`, `librarian.md`, `axiom_translation.md`, `rosetta_stone.md`.
-- Domain enum in `schemas.py`: real_analysis, topology, algebra, measure_theory, microeconomics, game_theory, welfare_economics.
-- **CLAUDECODE env var**: `os.environ.pop("CLAUDECODE", None)` in `claude_client.py` prevents interference when running inside Claude Code.
-- **LK_USE_GATEWAY=1**: Activates LiteLLM gateway for unified multi-provider LLM routing.
-- **SQLite**: Activated after `leanknowledge migrate`. Dual-writes JSON + SQLite. Incremental single-entry writes for status updates.
-- Backlog status flow: PENDING → BLOCKED → READY → IN_PROGRESS → COMPLETED/FAILED/AXIOMATIZED/SKIPPED.
-- Knowledge Agent is fully deterministic (regex-based, no LLM calls).
-- RepairDB handles ~35% of compiler errors without LLM calls (Tier A exact match), ~25% via heuristics (Tier B), remaining ~40% escalate to LLM (Tier C).
-- **Training base model**: Goedel-Prover-V2-8B (`Goedel-LM/Goedel-Prover-V2-8B`). Qwen3-8B architecture, expert-iteration trained with Lean compiler feedback. 83% pass@32 on MiniF2F.
-
-## CI/CD
-
-- `lean_action_ci.yml`: Lean compilation check + docgen on push/PR
-- `create-release.yml`: Auto-tags releases when `lean-toolchain` changes
-- `update.yml`: Daily Mathlib update check, auto-creates PRs
+- Axioms are treated as definitions throughout the pipeline (they define structure properties, not foundational axioms).
+- Axiomatized dependencies: when the prover hits an unproven dependency, it stubs it as a Lean axiom and adds it to the backlog — no recursive proving.
+- Agent prompts in `Current/prompts/` are living documents with iteration notes. When translation fails, iterate on the prompt, not the agent code.
+- Training triples `(StructuredProof, lean_code, compiler_output)` are collected from every translation attempt for future RL fine-tuning.

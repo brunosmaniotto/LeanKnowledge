@@ -1,55 +1,30 @@
 # Python
-.venv/
 __pycache__/
-*.pyc
+*.py[cod]
 *.egg-info/
 dist/
+build/
+.venv/
+venv/
 
-# Environment & secrets
-.env
-.secrets/
+# Data (downloaded, not committed)
+data/
+outputs/
 
 # Lean build artifacts
 .lake/
+lake-packages/
 
-# Generated outputs (large, regenerable)
-outputs/
-training_data/
+# IDE
+.vscode/
+.idea/
 
-# Source documents (large binaries)
-Sources/
-
-# Data files (large, regenerable)
-rosetta_stone/pairs/
-training/data/
-training/adapters/
-training/results/
-training/logs/
-leanknowledge.db
-models/
-
-# Ephemeral state files
-backlog.json
-librarian_index.json
-strategy_kb.json
-bib_index.json
-processed_titles.txt
-
-# Temporary extraction images
-tmp_pages/
-tmp*.png
-
-# Lean scratch/temp files
-LeanProject/Scratch*.lean
-LeanProject/Test.lean
-
-# Log files
-*.log
-
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Editor
-.idea/
-.vscode/
+# Previous/ bulky data (reference only)
+Previous/citation_graph/data/
+
+# Keys / secrets
+.env
