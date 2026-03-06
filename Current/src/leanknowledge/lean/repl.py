@@ -80,9 +80,11 @@ class LeanREPL:
                 env=self._env_cache,
             )
 
+            # Lean may write errors to stdout or stderr depending on version
+            errors = result.stderr or result.stdout
             if result.returncode == 0:
                 return True, ""
-            return False, result.stderr
+            return False, errors
         except subprocess.TimeoutExpired:
             return False, "Compilation timed out (300s)"
 

@@ -224,8 +224,17 @@ class TranslatorAgent:
             response = complete(model, prompt, system=system, max_tokens=8192)
             lean_code = _extract_lean_code(response)
 
-            # Compile
-            compiled, compiler_output = self.compiler.compile(lean_code)
+            # Reject empty or trivially vacuous code
+            if not lean_code or not any(
+                kw in lean_code for kw in ("theorem ", "lemma ", "def ", "instance ")
+            ):
+                compiled = False
+                compiler_output = (
+                    "error: empty or vacuous code — must contain a theorem/lemma/def declaration"
+                )
+            else:
+                # Compile
+                compiled, compiler_output = self.compiler.compile(lean_code)
 
             # Record triple
             triple = TranslationTriple(

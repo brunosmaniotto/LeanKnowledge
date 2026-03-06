@@ -67,9 +67,11 @@ class RealLeanCompiler:
         except subprocess.TimeoutExpired:
             return False, "Compilation timed out (300s)"
 
+        # Lean may write errors to stdout or stderr depending on version
+        errors = result.stderr or result.stdout
         if result.returncode == 0:
             return True, ""
-        return False, result.stderr
+        return False, errors
 
     def _compile_standalone(self, code: str) -> tuple[bool, str]:
         """Compile a standalone file (no Mathlib)."""
@@ -89,9 +91,10 @@ class RealLeanCompiler:
                 env=_lean_env(),
             )
 
+            errors = result.stderr or result.stdout
             if result.returncode == 0:
                 return True, ""
-            return False, result.stderr
+            return False, errors
         except subprocess.TimeoutExpired:
             return False, "Compilation timed out (120s)"
         finally:
