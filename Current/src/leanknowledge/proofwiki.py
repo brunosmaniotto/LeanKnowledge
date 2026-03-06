@@ -72,7 +72,7 @@ def _theorem_to_item(entry: dict, definitions: dict[int, str] | None = None) -> 
 
     # Extract first proof if available
     proof = None
-    if entry.get("has_proof") and entry.get("proofs"):
+    if entry.get("proofs"):
         proof_lines = entry["proofs"][0].get("contents", [])
         if proof_lines:
             proof = _clean_wiki_markup(proof_lines)
@@ -139,7 +139,7 @@ def load_proofwiki(
 
     items = []
     for entry in ds["theorems"]:
-        if with_proof_only and not entry.get("has_proof"):
+        if with_proof_only and not entry.get("proofs"):
             continue
 
         if cat_filter:
@@ -167,7 +167,7 @@ def dataset_stats(path: Path) -> dict:
             cats[c] += 1
 
     n_theorems = len(ds["theorems"])
-    n_with_proof = sum(1 for t in ds["theorems"] if t.get("has_proof"))
+    n_with_proof = sum(1 for t in ds["theorems"] if t.get("proofs"))
 
     return {
         "theorems": n_theorems,

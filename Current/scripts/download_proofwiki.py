@@ -51,7 +51,7 @@ def summarize(path: Path) -> None:
     n_theorems = len(ds["theorems"])
     n_definitions = len(ds["definitions"])
     n_others = len(ds.get("others", []))
-    n_with_proof = sum(1 for t in ds["theorems"] if t.get("has_proof"))
+    n_with_proof = sum(1 for t in ds["theorems"] if t.get("proofs"))
     n_proofs = sum(len(t.get("proofs", [])) for t in ds["theorems"])
 
     # Category distribution (top 20)

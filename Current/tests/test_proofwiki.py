@@ -27,8 +27,7 @@ SAMPLE_DATASET = {
                     "Let $a, b \\in \\Z$ be [[Definition:Even Integer|even integers]].",
                     "Then $a + b$ is even.",
                 ],
-                "has_proof": True,
-                "proofs": [
+                                "proofs": [
                     {
                         "contents": [
                             "Since $a$ is even, $a = 2k$ for some $k \\in \\Z$.",
@@ -49,8 +48,7 @@ SAMPLE_DATASET = {
                     "Let $C$ be a compact subspace of $T$.",
                     "Then $C$ is closed in $T$.",
                 ],
-                "has_proof": True,
-                "proofs": [
+                                "proofs": [
                     {
                         "contents": [
                             "Let $x \\in S \\setminus C$.",
@@ -66,8 +64,7 @@ SAMPLE_DATASET = {
                 "id": 3,
                 "label": "Fermat's Little Theorem",
                 "contents": ["If $p$ is prime and $\\gcd(a,p)=1$, then $a^{p-1} \\equiv 1 \\pmod{p}$."],
-                "has_proof": False,
-                "proofs": [],
+                                "proofs": [],
                 "categories": ["Number Theory"],
                 "toplevel_categories": ["Number Theory"],
             },
@@ -75,8 +72,7 @@ SAMPLE_DATASET = {
                 "id": 4,
                 "label": "Lemma for Bezout's Identity",
                 "contents": ["A helper result."],
-                "has_proof": True,
-                "proofs": [{"contents": ["Straightforward."], "refs": []}],
+                                "proofs": [{"contents": ["Straightforward."], "refs": []}],
                 "categories": ["Number Theory"],
                 "toplevel_categories": ["Number Theory"],
             },
