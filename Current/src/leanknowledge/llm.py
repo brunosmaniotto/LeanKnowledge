@@ -6,7 +6,7 @@ configured via environment variables with sensible defaults.
 Default models:
   - LK_MODEL_FAST_A:  anthropic/claude-sonnet-4-20250514
   - LK_MODEL_FAST_B:  deepseek/deepseek-reasoner  (DeepThink)
-  - LK_MODEL_HEAVY:   anthropic/claude-opus-4-20250115
+  - LK_MODEL_HEAVY:   anthropic/claude-sonnet-4-20250514  (Sonnet as heavy default)
 """
 
 import json
@@ -14,10 +14,10 @@ import os
 
 import litellm
 
-# Defaults
+# Defaults — use Sonnet as heavy until Opus is available on the API
 MODEL_FAST_A = os.environ.get("LK_MODEL_FAST_A", "anthropic/claude-sonnet-4-20250514")
 MODEL_FAST_B = os.environ.get("LK_MODEL_FAST_B", "deepseek/deepseek-reasoner")
-MODEL_HEAVY = os.environ.get("LK_MODEL_HEAVY", "anthropic/claude-opus-4-20250115")
+MODEL_HEAVY = os.environ.get("LK_MODEL_HEAVY", "anthropic/claude-sonnet-4-20250514")
 
 # Suppress LiteLLM's verbose logging by default
 litellm.suppress_debug_info = True
