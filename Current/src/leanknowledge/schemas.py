@@ -71,7 +71,7 @@ class Dependency(BaseModel):
 
 
 class ProofStep(BaseModel):
-    step_number: int
+    step_number: int | str
     description: str
     justification: str
     objects_introduced: list[str] = Field(default_factory=list)
