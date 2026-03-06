@@ -40,24 +40,30 @@ class LeanREPL:
 
         env = _lean_env()
 
+        # Extract LEAN_PATH from `lake env` by running a subshell that prints it
         try:
             result = subprocess.run(
-                ["lake", "env", "printPaths", "--json"],
+                ["lake", "env", "bash", "-c", "echo $LEAN_PATH"],
                 cwd=self.project_dir,
                 capture_output=True,
                 text=True,
                 timeout=60,
                 env=env,
             )
-            if result.returncode == 0:
-                paths_data = json.loads(result.stdout)
-                lean_path = os.pathsep.join(paths_data.get("oleanPath", []))
-                lean_src_path = os.pathsep.join(paths_data.get("srcPath", []))
-                if lean_path:
-                    env["LEAN_PATH"] = lean_path
-                if lean_src_path:
-                    env["LEAN_SRC_PATH"] = lean_src_path
-        except (subprocess.TimeoutExpired, json.JSONDecodeError, FileNotFoundError):
+            if result.returncode == 0 and result.stdout.strip():
+                env["LEAN_PATH"] = result.stdout.strip()
+
+            result2 = subprocess.run(
+                ["lake", "env", "bash", "-c", "echo $LEAN_SRC_PATH"],
+                cwd=self.project_dir,
+                capture_output=True,
+                text=True,
+                timeout=60,
+                env=env,
+            )
+            if result2.returncode == 0 and result2.stdout.strip():
+                env["LEAN_SRC_PATH"] = result2.stdout.strip()
+        except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
 
         self._env_cache = env

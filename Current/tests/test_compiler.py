@@ -61,29 +61,26 @@ class TestRealLeanCompiler:
 class TestLeanREPL:
     @patch("leanknowledge.lean.repl.subprocess.run")
     def test_caches_env(self, mock_run, tmp_path):
-        # First call: printPaths
-        mock_run.return_value = MagicMock(
-            returncode=0,
-            stdout='{"oleanPath": ["/a", "/b"], "srcPath": ["/c"]}',
-            stderr="",
-        )
+        # Two calls: lake env bash -c "echo $LEAN_PATH", then LEAN_SRC_PATH
+        mock_run.side_effect = [
+            MagicMock(returncode=0, stdout="/a:/b\n", stderr=""),
+            MagicMock(returncode=0, stdout="/c\n", stderr=""),
+        ]
 
         repl = LeanREPL(tmp_path)
         repl._ensure_env()
 
         assert repl._env_cache is not None
-        assert "LEAN_PATH" in repl._env_cache
+        assert repl._env_cache.get("LEAN_PATH") == "/a:/b"
+        assert repl._env_cache.get("LEAN_SRC_PATH") == "/c"
 
     @patch("leanknowledge.lean.repl.subprocess.run")
     def test_compile_success(self, mock_run, tmp_path):
-        # printPaths call, then lean call
+        # Two env calls + lean compile call
         mock_run.side_effect = [
-            MagicMock(
-                returncode=0,
-                stdout='{"oleanPath": [], "srcPath": []}',
-                stderr="",
-            ),
-            MagicMock(returncode=0, stderr=""),
+            MagicMock(returncode=0, stdout="", stderr=""),   # LEAN_PATH
+            MagicMock(returncode=0, stdout="", stderr=""),   # LEAN_SRC_PATH
+            MagicMock(returncode=0, stdout="", stderr=""),   # lean compile
         ]
 
         repl = LeanREPL(tmp_path)
