@@ -100,15 +100,34 @@ class TestPromptBuilding:
 
 class TestCodeExtraction:
     def test_plain_code(self):
-        assert _extract_lean_code("theorem x : True := trivial") == "theorem x : True := trivial"
+        result = _extract_lean_code("theorem x : True := trivial")
+        assert "theorem x : True := trivial" in result
+        assert result.startswith("import Mathlib")
 
     def test_strip_markdown_fences(self):
         code = "```lean\ntheorem x : True := trivial\n```"
-        assert _extract_lean_code(code) == "theorem x : True := trivial"
+        result = _extract_lean_code(code)
+        assert "theorem x : True := trivial" in result
+        assert "```" not in result
 
     def test_strip_fences_no_language(self):
         code = "```\ntheorem x : True := trivial\n```"
-        assert _extract_lean_code(code) == "theorem x : True := trivial"
+        result = _extract_lean_code(code)
+        assert "theorem x : True := trivial" in result
+        assert "```" not in result
+
+    def test_import_preserved_if_present(self):
+        code = "import Mathlib\n\ntheorem x : True := trivial"
+        result = _extract_lean_code(code)
+        assert result.startswith("import Mathlib")
+        # Should not have double import
+        assert result.count("import Mathlib") == 1
+
+    def test_truncates_at_example(self):
+        code = "theorem x : True := trivial\n\nexample : True := trivial"
+        result = _extract_lean_code(code)
+        assert "theorem x" in result
+        assert "example" not in result
 
 
 class TestTranslationResult:

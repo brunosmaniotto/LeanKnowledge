@@ -297,7 +297,14 @@ def _extract_lean_code(response: str) -> str:
                 end = i
                 break
 
-    return "\n".join(code_lines[:end]).strip()
+    result = "\n".join(code_lines[:end]).strip()
+
+    # Ensure import Mathlib is present (adapter models often omit it since
+    # the prompt already contains it as a prefix).
+    if result and not result.startswith("import "):
+        result = "import Mathlib\n\n" + result
+
+    return result
 
 
 # ---------------------------------------------------------------------------
