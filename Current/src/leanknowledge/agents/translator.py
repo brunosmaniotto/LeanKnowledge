@@ -37,8 +37,8 @@ TIER1_MODEL = os.environ.get("LK_TRANSLATOR_TIER1_MODEL", MODEL_FAST_B)  # Goede
 TIER2_MODEL = os.environ.get("LK_TRANSLATOR_TIER2_MODEL", "deepseek/deepseek-reasoner")  # DeepSeek
 TIER3_MODEL = os.environ.get("LK_TRANSLATOR_TIER3_MODEL", MODEL_HEAVY)  # Opus/Sonnet
 
-# Max output tokens per tier (Goedel has 8K context total, needs headroom)
-TIER1_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER1_MAX_TOKENS", "2048"))
+# Max output tokens per tier
+TIER1_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER1_MAX_TOKENS", "4096"))
 TIER2_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER2_MAX_TOKENS", "8192"))
 TIER3_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER3_MAX_TOKENS", "8192"))
 
@@ -184,15 +184,18 @@ def _build_goedel_prompt(proof: StructuredProof, lessons: str = "") -> str:
         )
         if condensed:
             rules = f"\n### Rules\n{condensed}\n"
+    # Seed the continuation with common imports/opens so the model
+    # doesn't have to guess namespace boilerplate.
+    preamble = "import Mathlib\nopen Finset BigOperators\n"
+
     return (
         f"### Instruction\n"
         f"Translate the following mathematical proof into Lean 4 code.\n"
-        f"The code MUST start with `import Mathlib` on the first line.\n"
         f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
         f"Output ONE theorem/lemma only — stop after the proof.\n"
         f"{rules}\n"
         f"### Natural Language Proof\n{nl}\n\n"
-        f"### Lean 4 Code\nimport Mathlib\n"
+        f"### Lean 4 Code\n{preamble}"
     )
 
 
@@ -224,17 +227,18 @@ def _build_goedel_retry_prompt(
         if condensed:
             rules = f"\n### Rules\n{condensed}\n"
 
+    preamble = "import Mathlib\nopen Finset BigOperators\n"
+
     return (
         f"### Instruction\n"
         f"Translate the following mathematical proof into Lean 4 code.\n"
-        f"The code MUST start with `import Mathlib` on the first line.\n"
         f"Previous attempts failed. Study the errors and produce CORRECT Lean 4 code.\n"
         f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
         f"Output ONE theorem/lemma only — stop after the proof.\n"
         f"{rules}\n"
         f"### Natural Language Proof\n{nl}\n"
         f"{attempts_text}\n"
-        f"### Lean 4 Code\nimport Mathlib\n"
+        f"### Lean 4 Code\n{preamble}"
     )
 
 
@@ -299,10 +303,11 @@ def _extract_lean_code(response: str) -> str:
 
     result = "\n".join(code_lines[:end]).strip()
 
-    # Ensure import Mathlib is present (adapter models often omit it since
-    # the prompt already contains it as a prefix).
+    # Ensure standard preamble is present (adapter models continue from
+    # the prompt prefix so they omit it from their output).
     if result and not result.startswith("import "):
-        result = "import Mathlib\n\n" + result
+        preamble = "import Mathlib\nopen Finset BigOperators\n\n"
+        result = preamble + result
 
     return result
 
