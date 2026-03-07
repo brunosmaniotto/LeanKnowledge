@@ -34,6 +34,10 @@ MAX_ATTEMPTS_TIER2 = int(os.environ.get("LK_TRANSLATOR_TIER2_ATTEMPTS", "5"))
 TIER1_MODEL = os.environ.get("LK_TRANSLATOR_TIER1_MODEL", MODEL_FAST_B)
 TIER2_MODEL = os.environ.get("LK_TRANSLATOR_TIER2_MODEL", MODEL_HEAVY)
 
+# Max output tokens per tier (Goedel has 8K context total, needs headroom)
+TIER1_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER1_MAX_TOKENS", "2048"))
+TIER2_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER2_MAX_TOKENS", "8192"))
+
 
 # ---------------------------------------------------------------------------
 # Training triple
@@ -135,6 +139,69 @@ def _build_retry_prompt(
     )
 
 
+# ---------------------------------------------------------------------------
+# Goedel-Prover compact prompt format
+# ---------------------------------------------------------------------------
+
+def _proof_to_nl(proof: StructuredProof) -> str:
+    """Convert a StructuredProof to compact NL text for Goedel's prompt format."""
+    parts = [f"**Statement**: {proof.goal_statement}"]
+    parts.append(f"**Strategy**: {proof.strategy}")
+
+    if proof.assumptions:
+        parts.append("**Assumptions**:")
+        for a in proof.assumptions:
+            hint = f" : {a.lean_type_hint}" if a.lean_type_hint else ""
+            parts.append(f"- {a.name}{hint}: {a.description}")
+
+    parts.append("**Proof**:")
+    for step in proof.steps:
+        hint = f" (by {step.lean_tactic_hint})" if step.lean_tactic_hint else ""
+        parts.append(f"{step.step_number}. {step.description}{hint}")
+
+    if proof.dependencies:
+        parts.append("**Dependencies**:")
+        for d in proof.dependencies:
+            parts.append(f"- {d.name}: {d.statement}")
+
+    return "\n".join(parts)
+
+
+def _build_goedel_prompt(proof: StructuredProof) -> str:
+    """Build a compact prompt matching Goedel-Prover's training format."""
+    nl = _proof_to_nl(proof)
+    return (
+        f"### Instruction\n"
+        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n\n"
+        f"### Natural Language Proof\n{nl}\n\n"
+        f"### Lean 4 Code\n"
+    )
+
+
+def _build_goedel_retry_prompt(
+    proof: StructuredProof,
+    history: list[TranslationTriple],
+) -> str:
+    """Build a Goedel retry prompt: compact NL + last failed attempt + error."""
+    nl = _proof_to_nl(proof)
+    # Only include the most recent failed attempt (context is limited)
+    last = history[-1]
+    return (
+        f"### Instruction\n"
+        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n"
+        f"A previous attempt failed. Fix the errors.\n\n"
+        f"### Natural Language Proof\n{nl}\n\n"
+        f"### Previous Attempt (FAILED)\n{last.lean_code}\n\n"
+        f"### Compiler Error\n{last.compiler_output[:500]}\n\n"
+        f"### Lean 4 Code\n"
+    )
+
+
+def _is_goedel_model(model: str) -> bool:
+    """Check if a model string refers to a Goedel-Prover variant."""
+    return "goedel" in model.lower() or "Goedel" in model
+
+
 def _extract_lean_code(response: str) -> str:
     """Extract Lean code from response, stripping any markdown fences."""
     text = response.strip()
@@ -176,28 +243,26 @@ class TranslatorAgent:
     def translate(self, proof: StructuredProof) -> TranslationResult:
         """Translate a structured proof to Lean 4.
 
-        Tries tier 1 (DeepSeek), then tier 2 (Opus), then flags for human.
+        Tries tier 1 (Goedel-Prover), then tier 2 (Sonnet/Opus), then flags for human.
         """
-        base_system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
-        # Inject lessons from the tuner (no current errors yet)
-        lessons = self.tuner.get_lessons()
-        system = f"{base_system}\n\n{lessons}" if lessons else base_system
         triples: list[TranslationTriple] = []
 
-        # Tier 1: DeepSeek
+        # Tier 1: Goedel-Prover (compact prompt, smaller context)
         print(f"  [Agent 6] Tier 1: {self.tier1_model} "
               f"(up to {MAX_ATTEMPTS_TIER1} attempts)")
         result = self._try_tier(
-            proof, self.tier1_model, MAX_ATTEMPTS_TIER1, triples, system,
+            proof, self.tier1_model, MAX_ATTEMPTS_TIER1, triples,
+            max_tokens=TIER1_MAX_TOKENS,
         )
         if result is not None:
             return result
 
-        # Tier 2: Opus
+        # Tier 2: Sonnet/Opus (full prompt with system instructions)
         print(f"  [Agent 6] Tier 1 exhausted. Escalating to Tier 2: {self.tier2_model} "
               f"(up to {MAX_ATTEMPTS_TIER2} attempts)")
         result = self._try_tier(
-            proof, self.tier2_model, MAX_ATTEMPTS_TIER2, triples, system,
+            proof, self.tier2_model, MAX_ATTEMPTS_TIER2, triples,
+            max_tokens=TIER2_MAX_TOKENS,
         )
         if result is not None:
             return result
@@ -217,29 +282,37 @@ class TranslatorAgent:
         model: str,
         max_attempts: int,
         triples: list[TranslationTriple],
-        system: str,
+        max_tokens: int = 8192,
     ) -> TranslationResult | None:
         """Try up to max_attempts with a given model. Returns result on success, None to escalate."""
+        use_goedel = _is_goedel_model(model)
+
         for i in range(max_attempts):
             attempt_num = len(triples) + 1
 
-            # Refresh lessons with current theorem's errors
-            current_errors = [
-                t.compiler_output for t in triples if not t.compiled and t.compiler_output
-            ]
-            if current_errors:
-                base_system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
-                lessons = self.tuner.get_lessons(current_errors)
-                system = f"{base_system}\n\n{lessons}"
-
-            # Build prompt (with history if not first attempt)
-            if not triples:
-                prompt = _build_initial_prompt(proof)
+            if use_goedel:
+                # Goedel: compact prompt matching its training format, no system prompt
+                if not triples:
+                    prompt = _build_goedel_prompt(proof)
+                else:
+                    prompt = _build_goedel_retry_prompt(proof, triples)
+                system = ""
             else:
-                prompt = _build_retry_prompt(proof, triples)
+                # Cloud models: full system prompt with tuner lessons
+                base_system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
+                current_errors = [
+                    t.compiler_output for t in triples if not t.compiled and t.compiler_output
+                ]
+                lessons = self.tuner.get_lessons(current_errors if current_errors else None)
+                system = f"{base_system}\n\n{lessons}" if lessons else base_system
+
+                if not triples:
+                    prompt = _build_initial_prompt(proof)
+                else:
+                    prompt = _build_retry_prompt(proof, triples)
 
             # Call LLM
-            response = complete(model, prompt, system=system, max_tokens=8192)
+            response = complete(model, prompt, system=system, max_tokens=max_tokens)
             lean_code = _extract_lean_code(response)
 
             # Reject empty or trivially vacuous code
