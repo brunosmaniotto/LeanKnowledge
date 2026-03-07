@@ -186,11 +186,13 @@ def _build_goedel_prompt(proof: StructuredProof, lessons: str = "") -> str:
             rules = f"\n### Rules\n{condensed}\n"
     return (
         f"### Instruction\n"
-        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n"
+        f"Translate the following mathematical proof into Lean 4 code.\n"
+        f"The code MUST start with `import Mathlib` on the first line.\n"
         f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
+        f"Output ONE theorem/lemma only — stop after the proof.\n"
         f"{rules}\n"
         f"### Natural Language Proof\n{nl}\n\n"
-        f"### Lean 4 Code\n"
+        f"### Lean 4 Code\nimport Mathlib\n"
     )
 
 
@@ -202,14 +204,15 @@ def _build_goedel_retry_prompt(
     """Build a Goedel retry prompt with failed attempts and errors."""
     nl = _proof_to_nl(proof)
 
-    # Include up to 2 most recent failed attempts (balance context vs history)
-    recent_failures = [t for t in history if not t.compiled][-2:]
+    # Include only the most recent failed attempt (save context for 8K models)
+    recent_failures = [t for t in history if not t.compiled][-1:]
     attempts_text = ""
     for t in recent_failures:
+        code_snippet = t.lean_code[:400] if len(t.lean_code) > 400 else t.lean_code
         attempts_text += (
             f"\n--- ATTEMPT {t.attempt_number} (FAILED) ---\n"
-            f"{t.lean_code}\n"
-            f"Error: {t.compiler_output[:300]}\n"
+            f"{code_snippet}\n"
+            f"Error: {t.compiler_output[:200]}\n"
         )
 
     rules = ""
@@ -223,13 +226,15 @@ def _build_goedel_retry_prompt(
 
     return (
         f"### Instruction\n"
-        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n"
+        f"Translate the following mathematical proof into Lean 4 code.\n"
+        f"The code MUST start with `import Mathlib` on the first line.\n"
         f"Previous attempts failed. Study the errors and produce CORRECT Lean 4 code.\n"
         f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
+        f"Output ONE theorem/lemma only — stop after the proof.\n"
         f"{rules}\n"
         f"### Natural Language Proof\n{nl}\n"
         f"{attempts_text}\n"
-        f"### Lean 4 Code\n"
+        f"### Lean 4 Code\nimport Mathlib\n"
     )
 
 
@@ -274,7 +279,25 @@ def _extract_lean_code(response: str) -> str:
             start = i
             break
 
-    return "\n".join(lines[start:]).strip()
+    code_lines = lines[start:]
+
+    # Truncate after the first declaration — stop at the first `example`
+    # or second top-level `theorem`/`lemma`/`def` (the adapter sometimes
+    # generates many variations after the main proof).
+    decl_count = 0
+    end = len(code_lines)
+    for i, line in enumerate(code_lines):
+        stripped = line.strip()
+        if stripped.startswith("example "):
+            end = i
+            break
+        if stripped.startswith(("theorem ", "lemma ", "def ")) and i > 0:
+            decl_count += 1
+            if decl_count >= 2:
+                end = i
+                break
+
+    return "\n".join(code_lines[:end]).strip()
 
 
 # ---------------------------------------------------------------------------
