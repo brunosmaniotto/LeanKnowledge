@@ -48,7 +48,7 @@ All agents follow the same pattern: a class with one main method, using LLM call
 | 3 - Triage | `agents/triage.py` | No | Fully deterministic type/role mapping. Defines `ItemCategory`, `InboxItem`, `Inbox` |
 | 4 - Librarian | `agents/librarian.py` | No | Pluggable `Library` interface. `InMemoryLibrary` for tests, semantic search planned |
 | 5 - Proof Structurer | `agents/proof_structurer.py` | Yes (LiteLLM) | Thin wrapper — intelligence lives in `prompts/proof_structurer.md` |
-| 6 - Translator | `agents/translator.py` | Yes (LiteLLM) | 5x DeepSeek → 5x Opus escalation. Full attempt history carried forward. Pluggable `LeanCompiler` interface |
+| 6 - Translator | `agents/translator.py` | Yes (LiteLLM) | 5× Goedel → 5× DeepSeek → 5× Opus escalation. Full attempt history carried across tiers. Pluggable `LeanCompiler` interface |
 
 ### Key modules
 
@@ -63,8 +63,10 @@ All LiteLLM calls use env vars with defaults:
 | Env var | Default | Used by |
 |---------|---------|---------|
 | `LK_MODEL_FAST_A` | `anthropic/claude-sonnet-4-20250514` | Agent 2 ensemble |
-| `LK_MODEL_FAST_B` | `deepseek/deepseek-reasoner` | Agent 2 ensemble, Agent 6 Tier 1 |
-| `LK_MODEL_HEAVY` | `anthropic/claude-opus-4-20250115` | Agent 2 arbiter, Agent 5, Agent 6 Tier 2 |
+| `LK_MODEL_FAST_B` | `openai/Goedel-LM/Goedel-Prover-V2-8B` | Agent 6 Tier 1 (via vLLM) |
+| `LK_MODEL_HEAVY` | `anthropic/claude-sonnet-4-20250514` | Agent 2 arbiter, Agent 5, Agent 6 Tier 3 |
+
+Agent 6 Tier 2 defaults to `deepseek/deepseek-reasoner`. Self-hosted models use `LK_MODEL_FAST_B_API_BASE` for routing.
 
 Agent 1 (Extraction) uses the Anthropic SDK directly with `LK_EXTRACTION_MODEL` (default: `claude-sonnet-4-20250514`).
 

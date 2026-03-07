@@ -27,16 +27,20 @@ from ..prompt_tuner import PromptTuner
 
 PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "translator.md"
 
-# Escalation config
+# Three-tier escalation: Goedel → DeepSeek → Opus
+# Each tier carries the full history of all previous attempts.
 MAX_ATTEMPTS_TIER1 = int(os.environ.get("LK_TRANSLATOR_TIER1_ATTEMPTS", "5"))
 MAX_ATTEMPTS_TIER2 = int(os.environ.get("LK_TRANSLATOR_TIER2_ATTEMPTS", "5"))
+MAX_ATTEMPTS_TIER3 = int(os.environ.get("LK_TRANSLATOR_TIER3_ATTEMPTS", "5"))
 
-TIER1_MODEL = os.environ.get("LK_TRANSLATOR_TIER1_MODEL", MODEL_FAST_B)
-TIER2_MODEL = os.environ.get("LK_TRANSLATOR_TIER2_MODEL", MODEL_HEAVY)
+TIER1_MODEL = os.environ.get("LK_TRANSLATOR_TIER1_MODEL", MODEL_FAST_B)  # Goedel
+TIER2_MODEL = os.environ.get("LK_TRANSLATOR_TIER2_MODEL", "deepseek/deepseek-reasoner")  # DeepSeek
+TIER3_MODEL = os.environ.get("LK_TRANSLATOR_TIER3_MODEL", MODEL_HEAVY)  # Opus/Sonnet
 
 # Max output tokens per tier (Goedel has 8K context total, needs headroom)
 TIER1_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER1_MAX_TOKENS", "2048"))
 TIER2_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER2_MAX_TOKENS", "8192"))
+TIER3_MAX_TOKENS = int(os.environ.get("LK_TRANSLATOR_TIER3_MAX_TOKENS", "8192"))
 
 
 # ---------------------------------------------------------------------------
@@ -59,9 +63,10 @@ class TranslationTriple:
 
 class TranslationOutcome(str, Enum):
     SUCCESS = "success"
-    FAILED_TIER1 = "failed_tier1"    # exhausted DeepSeek attempts
-    FAILED_TIER2 = "failed_tier2"    # exhausted Opus attempts
-    NEEDS_HUMAN = "needs_human"       # both tiers exhausted
+    FAILED_TIER1 = "failed_tier1"    # exhausted Goedel attempts
+    FAILED_TIER2 = "failed_tier2"    # exhausted DeepSeek attempts
+    FAILED_TIER3 = "failed_tier3"    # exhausted Opus attempts
+    NEEDS_HUMAN = "needs_human"       # all tiers exhausted
 
 
 @dataclass
@@ -276,14 +281,14 @@ def _extract_lean_code(response: str) -> str:
 # ---------------------------------------------------------------------------
 
 class TranslatorAgent:
-    """Agent 6: Translate structured proofs to Lean 4 with escalation.
+    """Agent 6: Translate structured proofs to Lean 4 with three-tier escalation.
 
-    5 attempts with DeepSeek → 5 attempts with Opus → flag for human.
-    Each attempt carries full history of previous failures.
-    Every attempt produces a training triple.
+    5× Goedel-Prover → 5× DeepSeek → 5× Opus → flag for human.
+    Each attempt carries full history of ALL previous failures across tiers.
+    Every attempt produces a training triple (fed to the Prompt Tuner).
 
-    The optional PromptTuner injects lessons learned from past failures
-    into the system prompt, so models avoid repeating common mistakes.
+    The PromptTuner injects lessons learned from past failures into prompts,
+    so later attempts and later theorems avoid repeating common mistakes.
     """
 
     def __init__(
@@ -291,17 +296,21 @@ class TranslatorAgent:
         compiler: LeanCompiler,
         tier1_model: str = TIER1_MODEL,
         tier2_model: str = TIER2_MODEL,
+        tier3_model: str = TIER3_MODEL,
         tuner: PromptTuner | None = None,
     ):
         self.compiler = compiler
         self.tier1_model = tier1_model
         self.tier2_model = tier2_model
+        self.tier3_model = tier3_model
         self.tuner = tuner or PromptTuner()
 
     def translate(self, proof: StructuredProof) -> TranslationResult:
         """Translate a structured proof to Lean 4.
 
-        Tries tier 1 (Goedel-Prover), then tier 2 (Sonnet/Opus), then flags for human.
+        Three-tier escalation: Goedel → DeepSeek → Opus.
+        The triples list is shared across all tiers, so each escalation
+        sees the full history of what was tried and what failed.
         """
         triples: list[TranslationTriple] = []
 
@@ -315,9 +324,10 @@ class TranslatorAgent:
         if result is not None:
             return result
 
-        # Tier 2: Sonnet/Opus (full prompt with system instructions)
+        # Tier 2: DeepSeek (full prompt + history from Goedel failures)
         print(f"  [Agent 6] Tier 1 exhausted. Escalating to Tier 2: {self.tier2_model} "
-              f"(up to {MAX_ATTEMPTS_TIER2} attempts)")
+              f"(up to {MAX_ATTEMPTS_TIER2} attempts, "
+              f"carrying {len(triples)} previous attempts)")
         result = self._try_tier(
             proof, self.tier2_model, MAX_ATTEMPTS_TIER2, triples,
             max_tokens=TIER2_MAX_TOKENS,
@@ -325,8 +335,19 @@ class TranslatorAgent:
         if result is not None:
             return result
 
-        # Both tiers exhausted
-        print(f"  [Agent 6] Both tiers exhausted. Flagging for human attention.")
+        # Tier 3: Opus (full prompt + history from Goedel + DeepSeek failures)
+        print(f"  [Agent 6] Tier 2 exhausted. Escalating to Tier 3: {self.tier3_model} "
+              f"(up to {MAX_ATTEMPTS_TIER3} attempts, "
+              f"carrying {len(triples)} previous attempts)")
+        result = self._try_tier(
+            proof, self.tier3_model, MAX_ATTEMPTS_TIER3, triples,
+            max_tokens=TIER3_MAX_TOKENS,
+        )
+        if result is not None:
+            return result
+
+        # All tiers exhausted
+        print(f"  [Agent 6] All tiers exhausted. Flagging for human attention.")
         return TranslationResult(
             outcome=TranslationOutcome.NEEDS_HUMAN,
             lean_code=triples[-1].lean_code if triples else None,

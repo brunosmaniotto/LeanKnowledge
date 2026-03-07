@@ -150,4 +150,5 @@ class TestEscalation:
         assert TranslationOutcome.SUCCESS == "success"
         assert TranslationOutcome.FAILED_TIER1 == "failed_tier1"
         assert TranslationOutcome.FAILED_TIER2 == "failed_tier2"
+        assert TranslationOutcome.FAILED_TIER3 == "failed_tier3"
         assert TranslationOutcome.NEEDS_HUMAN == "needs_human"
