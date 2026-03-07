@@ -23,6 +23,7 @@ from pathlib import Path
 
 from ..schemas import StructuredProof
 from ..llm import complete, MODEL_FAST_B, MODEL_HEAVY
+from ..prompt_tuner import PromptTuner
 
 PROMPT_PATH = Path(__file__).resolve().parents[3] / "prompts" / "translator.md"
 
@@ -155,6 +156,9 @@ class TranslatorAgent:
     5 attempts with DeepSeek → 5 attempts with Opus → flag for human.
     Each attempt carries full history of previous failures.
     Every attempt produces a training triple.
+
+    The optional PromptTuner injects lessons learned from past failures
+    into the system prompt, so models avoid repeating common mistakes.
     """
 
     def __init__(
@@ -162,17 +166,22 @@ class TranslatorAgent:
         compiler: LeanCompiler,
         tier1_model: str = TIER1_MODEL,
         tier2_model: str = TIER2_MODEL,
+        tuner: PromptTuner | None = None,
     ):
         self.compiler = compiler
         self.tier1_model = tier1_model
         self.tier2_model = tier2_model
+        self.tuner = tuner or PromptTuner()
 
     def translate(self, proof: StructuredProof) -> TranslationResult:
         """Translate a structured proof to Lean 4.
 
         Tries tier 1 (DeepSeek), then tier 2 (Opus), then flags for human.
         """
-        system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
+        base_system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
+        # Inject lessons from the tuner (no current errors yet)
+        lessons = self.tuner.get_lessons()
+        system = f"{base_system}\n\n{lessons}" if lessons else base_system
         triples: list[TranslationTriple] = []
 
         # Tier 1: DeepSeek
@@ -213,6 +222,15 @@ class TranslatorAgent:
         """Try up to max_attempts with a given model. Returns result on success, None to escalate."""
         for i in range(max_attempts):
             attempt_num = len(triples) + 1
+
+            # Refresh lessons with current theorem's errors
+            current_errors = [
+                t.compiler_output for t in triples if not t.compiled and t.compiler_output
+            ]
+            if current_errors:
+                base_system = PROMPT_PATH.read_text() if PROMPT_PATH.exists() else ""
+                lessons = self.tuner.get_lessons(current_errors)
+                system = f"{base_system}\n\n{lessons}"
 
             # Build prompt (with history if not first attempt)
             if not triples:

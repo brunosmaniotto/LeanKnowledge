@@ -20,6 +20,7 @@ from .agents.proof_structurer import ProofStructurer
 from .agents.translator import TranslatorAgent, TranslationResult, TranslationOutcome
 from .backlog import Backlog, BacklogEntry, BacklogStatus
 from .lean.compiler import RealLeanCompiler
+from .prompt_tuner import PromptTuner
 from .schemas import ExtractionResult
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -53,6 +54,9 @@ class Pipeline:
     ):
         self.output_dir = output_dir or (PROJECT_ROOT / "outputs")
 
+        # Prompt Tuner — learns from failures across the run
+        self.tuner = PromptTuner()
+
         # Agents
         self.extraction = ExtractionAgent()
         self.claim_extraction = ClaimExtractionAgent()
@@ -60,7 +64,7 @@ class Pipeline:
         self.librarian = LibrarianAgent(library or InMemoryLibrary())
         self.structurer = ProofStructurer()
         self.compiler = RealLeanCompiler(project_dir=lean_project_dir)
-        self.translator = TranslatorAgent(compiler=self.compiler)
+        self.translator = TranslatorAgent(compiler=self.compiler, tuner=self.tuner)
 
         # State
         self.backlog = Backlog()
@@ -168,6 +172,17 @@ class Pipeline:
 
             # Agent 6: structured proof → Lean 4 code
             translation = self.translator.translate(proof)
+
+            # Feed triples to the tuner so future theorems benefit
+            triple_dicts = [
+                {
+                    "compiled": t.compiled,
+                    "compiler_output": t.compiler_output,
+                    "lean_code": t.lean_code,
+                }
+                for t in translation.triples
+            ]
+            self.tuner.ingest_triples(triple_dicts)
 
             if translation.outcome == TranslationOutcome.SUCCESS:
                 lean_file = self._save_lean(item.id, translation.lean_code)

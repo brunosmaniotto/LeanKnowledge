@@ -162,6 +162,14 @@ def main():
 
     pipeline.save_backlog(backlog_path)
 
+    # Load lessons from previous runs' triples
+    triples_dir = output_dir / "triples"
+    if triples_dir.exists():
+        pipeline.tuner.ingest_triples_dir(triples_dir)
+        tuner_stats = pipeline.tuner.stats
+        print(f"  Prompt Tuner: loaded {tuner_stats['total_failures_ingested']} "
+              f"past failures, {len(tuner_stats['triggered_rules'])} active rules")
+
     if args.load_only:
         print("Load-only mode — backlog saved, exiting.")
         return

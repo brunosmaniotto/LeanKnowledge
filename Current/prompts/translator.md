@@ -60,15 +60,32 @@ You will be shown previous attempts and their compiler errors. Study the errors 
 
 ---
 
+## Critical mistakes to avoid
+
+### Lean 3 vs Lean 4 syntax
+- NEVER write `∑ i in range n, f i` — this is Lean 3.
+- Lean 4 syntax: `∑ i ∈ Finset.range n, f i` (or `open Finset` then `∑ i ∈ range n, f i`).
+- Same for products: `∏ i ∈ s, f i`, NOT `∏ i in s, f i`.
+- Use `open BigOperators` for `∑` and `∏` notation.
+
+### Natural number division
+- `ℕ` division is FLOOR division: `5 / 2 = 2`, not `2.5`.
+- Avoid `n * (n+1) / 2` directly — it loses information.
+- Strategies: multiply both sides to eliminate division, cast to `ℤ`/`ℚ`, or reformulate without division.
+
+### Mathlib identifiers
+- Do NOT guess lemma names. If unsure, use `exact?` or `apply?` to search.
+- Prefer `import Mathlib` (imports everything) over specific module paths that may be wrong.
+- Check namespaces: use `Nat.add_comm` or `open Nat`.
+
+### Empty output
+- You MUST produce a `theorem`, `lemma`, or `def` declaration.
+- Never output empty text, comments only, or just imports.
+
 ## Iteration notes
 
 <!--
-### What helps compilation:
-- (add observations here)
-
-### Common failure patterns:
-- (add observations here)
-
 ### Prompt changes log:
 - v1 (2026-03-05): Initial version
+- v2 (2026-03-06): Added critical mistakes section from pilot run observations
 -->
