@@ -167,12 +167,23 @@ def _proof_to_nl(proof: StructuredProof) -> str:
     return "\n".join(parts)
 
 
-def _build_goedel_prompt(proof: StructuredProof) -> str:
+def _build_goedel_prompt(proof: StructuredProof, lessons: str = "") -> str:
     """Build a compact prompt matching Goedel-Prover's training format."""
     nl = _proof_to_nl(proof)
+    rules = ""
+    if lessons:
+        # Extract just the bullet points from the tuner (skip headers)
+        condensed = "\n".join(
+            l for l in lessons.split("\n")
+            if l.strip().startswith("- ") or l.strip().startswith("* ")
+        )
+        if condensed:
+            rules = f"\n### Rules\n{condensed}\n"
     return (
         f"### Instruction\n"
-        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n\n"
+        f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n"
+        f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
+        f"{rules}\n"
         f"### Natural Language Proof\n{nl}\n\n"
         f"### Lean 4 Code\n"
     )
@@ -181,18 +192,38 @@ def _build_goedel_prompt(proof: StructuredProof) -> str:
 def _build_goedel_retry_prompt(
     proof: StructuredProof,
     history: list[TranslationTriple],
+    lessons: str = "",
 ) -> str:
-    """Build a Goedel retry prompt: compact NL + last failed attempt + error."""
+    """Build a Goedel retry prompt with failed attempts and errors."""
     nl = _proof_to_nl(proof)
-    # Only include the most recent failed attempt (context is limited)
-    last = history[-1]
+
+    # Include up to 2 most recent failed attempts (balance context vs history)
+    recent_failures = [t for t in history if not t.compiled][-2:]
+    attempts_text = ""
+    for t in recent_failures:
+        attempts_text += (
+            f"\n--- ATTEMPT {t.attempt_number} (FAILED) ---\n"
+            f"{t.lean_code}\n"
+            f"Error: {t.compiler_output[:300]}\n"
+        )
+
+    rules = ""
+    if lessons:
+        condensed = "\n".join(
+            l for l in lessons.split("\n")
+            if l.strip().startswith("- ") or l.strip().startswith("* ")
+        )
+        if condensed:
+            rules = f"\n### Rules\n{condensed}\n"
+
     return (
         f"### Instruction\n"
         f"Translate the following mathematical proof into Lean 4 code with Mathlib imports.\n"
-        f"A previous attempt failed. Fix the errors.\n\n"
-        f"### Natural Language Proof\n{nl}\n\n"
-        f"### Previous Attempt (FAILED)\n{last.lean_code}\n\n"
-        f"### Compiler Error\n{last.compiler_output[:500]}\n\n"
+        f"Previous attempts failed. Study the errors and produce CORRECT Lean 4 code.\n"
+        f"Output ONLY valid Lean 4 code. No markdown, no explanation.\n"
+        f"{rules}\n"
+        f"### Natural Language Proof\n{nl}\n"
+        f"{attempts_text}\n"
         f"### Lean 4 Code\n"
     )
 
@@ -318,11 +349,15 @@ class TranslatorAgent:
             attempt_num = len(triples) + 1
 
             if use_goedel:
-                # Goedel: compact prompt matching its training format, no system prompt
+                # Goedel: compact prompt with condensed tuner lessons
+                current_errors = [
+                    t.compiler_output for t in triples if not t.compiled and t.compiler_output
+                ]
+                lessons = self.tuner.get_lessons(current_errors if current_errors else None)
                 if not triples:
-                    prompt = _build_goedel_prompt(proof)
+                    prompt = _build_goedel_prompt(proof, lessons=lessons)
                 else:
-                    prompt = _build_goedel_retry_prompt(proof, triples)
+                    prompt = _build_goedel_retry_prompt(proof, triples, lessons=lessons)
                 system = ""
             else:
                 # Cloud models: full system prompt with tuner lessons
