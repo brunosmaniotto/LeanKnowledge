@@ -531,6 +531,151 @@ Each version of the translator produces triples that train the next version. The
 
 ---
 
+## 8.5. Prompt Tuner
+
+**Role:** Learn from compilation failures across a run and inject "lessons learned" into the translator's system prompt, so later theorems avoid mistakes that earlier theorems hit.
+
+The Prompt Tuner sits between the Pipeline orchestrator and Agent 6 (Translator). It is not a separate agent — it augments Agent 6's system prompt with targeted advice based on observed failure patterns.
+
+### Two-layer architecture
+
+```
+                    ┌──────────────────────────┐
+                    │     Static Rules          │  Hand-written from pilot observations.
+                    │  (always available)       │  Triggered by regex on compiler errors.
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │    Dynamic Patterns       │  Extracted from training triples.
+                    │  (learned per-run)        │  Surfaces errors seen ≥2 times.
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │   "LESSONS LEARNED"       │  Injected into translator's
+                    │   section in system       │  system prompt per-attempt.
+                    │   prompt                  │
+                    └──────────────────────────┘
+```
+
+### Static rules
+
+Hand-written rules seeded from pilot run observations. Each rule has:
+- A **name** and **description** (injected as advice text)
+- A **regex trigger** — matched against compiler error strings
+- A **priority** (higher = appears earlier in the prompt)
+
+| Rule | Trigger pattern | What it teaches |
+|------|-----------------|-----------------|
+| `lean3_sum_syntax` | `unexpected token 'in'` | NEVER use `∑ i in` — use `∑ i ∈` (Lean 4 syntax) |
+| `lean3_prod_syntax` | `unexpected token 'in'` | Same for `∏` notation |
+| `nat_division` | `rewrite failed.*/ in` | ℕ division is FLOOR division — avoid or cast to ℚ |
+| `hallucinated_ident` | `Unknown constant\|unknown identifier` | Do NOT guess Mathlib names — use `exact?` or `apply?` |
+| `deprecated_api` | `has been deprecated` | Check for API changes in current Mathlib |
+| `rewrite_pattern_mismatch` | `rewrite.*did not find` | Verify rewrite target matches exactly |
+| `empty_code` | `empty or vacuous code` | Must produce a `theorem`/`lemma`/`def` declaration |
+| `general_lean4` | *(always included)* | Import `Mathlib`, use `by` tactic blocks, prefer `simp`/`omega`/`linarith` |
+
+### Dynamic pattern extraction
+
+After each theorem attempt, the Pipeline feeds all training triples to the Tuner via `ingest_triples()`. The Tuner:
+
+1. **Normalizes** error messages — strips file paths, line numbers, and specific identifiers
+2. **Buckets** errors by normalized message
+3. **Surfaces patterns** seen ≥2 times as `ErrorPattern` objects (with count and example)
+
+These patterns appear in a "Recurring errors in this run" section of the lessons output, alerting the model to systematic issues it may be repeating.
+
+### Integration with Agent 6
+
+The Tuner is created once per Pipeline run and shared across all theorem translations:
+
+```python
+# Pipeline.__init__
+self.tuner = PromptTuner()
+self.translator = TranslatorAgent(compiler=self.compiler, tuner=self.tuner)
+
+# After each theorem
+self.tuner.ingest_triples(triple_dicts)  # learn from this theorem's attempts
+```
+
+Within `TranslatorAgent._try_tier()`, the system prompt is refreshed on each attempt:
+
+```python
+current_errors = [t.compiler_output for t in triples if not t.compiled]
+lessons = self.tuner.get_lessons(current_errors)
+system = f"{base_system}\n\n{lessons}"
+```
+
+This means:
+- **Attempt 1:** gets general lessons + any patterns from previous theorems
+- **Attempt N:** gets lessons boosted by *this theorem's* specific errors
+- **Later theorems:** benefit from all earlier theorems' failures
+
+### Priority boosting
+
+Rules are ranked by effective priority = base priority + historical trigger count + current error match bonus. This ensures:
+- Rules that fire often (common mistakes) float to the top
+- Rules matching the current theorem's errors get extra weight
+- General advice stays at lower priority but is always included
+
+### ProofWiki pilot results
+
+The Prompt Tuner was built after analyzing a 5-theorem pilot run on ProofWiki (Number Theory category):
+
+| Theorem | Result | Attempts | Key failure |
+|---------|--------|----------|-------------|
+| Euclid's Theorem | SUCCESS | 4 (DeepSeek) | Lean 3 syntax on attempts 1-3 |
+| Derivative of exp | SUCCESS | 8 (Sonnet) | Hallucinated Mathlib names on attempts 1-7 |
+| Sum of First N | FAILED | 10 | ℕ floor division |
+| Fermat's Little | FAILED | 10 | Hallucinated `ZMod.fermat_little` |
+| Binomial Theorem | FAILED | 10 | ℕ floor division + wrong syntax |
+
+**2/5 (40%) success rate.** The static rules directly address the three main failure categories observed.
+
+### Key files
+
+- `src/leanknowledge/prompt_tuner.py` — Prompt Tuner implementation (Rule, ErrorPattern, PromptTuner)
+- `prompts/translator.md` — Base translator prompt (includes "Critical mistakes to avoid" section)
+
+---
+
+## 8.6. ProofWiki Adapter
+
+**Role:** Load theorems from the NaturalProofs ProofWiki dataset and feed them directly into the formalization pipeline (Agents 5-6), bypassing Agents 1-4 since the content is already structured.
+
+The ProofWiki dataset (from Zenodo) contains 19,734 theorems with 17,911 having full proofs. It provides a large-scale benchmark for the pipeline without needing PDF extraction or claim identification.
+
+```
+naturalproofs_proofwiki.json (111 MB)
+        │
+        ▼
+┌───────────────────┐
+│  ProofWiki Adapter │   Clean wiki markup, classify labels,
+│  (load_proofwiki)  │   resolve dependency refs → ExtractedItem
+└───────────┬───────┘
+            │
+            ▼  (skip Agents 1-4)
+┌───────────────────┐
+│     Backlog       │   Items enter as READY with category tag
+└───────────┬───────┘
+            │
+            ▼
+┌───────────────────┐
+│  Agent 5 → 6      │   Normal formalization path
+└───────────────────┘
+```
+
+Supports filtering by category (`--category "Number Theory"`), limiting count (`--max 10`), and resuming from saved backlog.
+
+### Key files
+
+- `src/leanknowledge/proofwiki.py` — Dataset loader + wiki markup cleaning
+- `scripts/run_proofwiki.py` — Batch runner with resume support + Prompt Tuner integration
+- `scripts/download_proofwiki.py` — Downloads dataset from Zenodo
+
+---
+
 ## 9. Agent 7 — Knowledge Agent (PLANNED)
 
 **Role:** After a theorem is successfully formalized, analyze the verified Lean code to extract structured metadata. No LLM calls — fully deterministic, regex-based analysis of compiled Lean output.
@@ -601,7 +746,7 @@ StrategyEntry:
 
 ---
 
-## 10. Open Design Questions
+## 11. Open Design Questions
 
 ### Librarian — Semantic Search
 - Three-layer stack designed (see §5): embeddings → Loogle → LLM fallback
@@ -615,9 +760,9 @@ StrategyEntry:
 
 ---
 
-## 10. Summary — Current State
+## 12. Summary — Current State
 
-### What's built (124 tests passing)
+### What's built (164 tests passing)
 
 | # | Component | Role | Implementation |
 |---|-----------|------|---------------|
@@ -627,11 +772,19 @@ StrategyEntry:
 | 4 | Librarian | dedup gate → backlog | Pluggable Library interface |
 | 5 | Proof Structurer | NL proof → structured plan | Opus, prompt-driven |
 | 6 | Translator | structured proof → Lean 4 | 5× DeepSeek → 5× Opus → human flag |
+| — | Prompt Tuner | learn from failures → better prompts | Static rules + dynamic pattern extraction from triples |
+| — | ProofWiki Adapter | NaturalProofs dataset → backlog | 17,911 theorems, bypasses Agents 1-4 |
 | — | Backlog | work queue | Dependency resolution (READY/BLOCKED), axiomatized tracking |
 | — | Lean compiler | `lean` binary wrapper | REPL (cached paths) + cold start, error parsing, 3-tier repair DB |
 | — | Pipeline | orchestrator + CLI | `extract`, `next`, `run`, `status`. Training triple collection |
 
-### What's not built yet (designed, see §9-10)
+### Pilot results (ProofWiki, Number Theory)
+
+- **5 theorems attempted, 2 compiled (40%)** — Euclid's Theorem (4 attempts), Derivative of exp (8 attempts)
+- Failures driven by: ℕ floor division, hallucinated Mathlib identifiers, Lean 3 syntax
+- Prompt Tuner seeded with static rules from these observations
+
+### What's not built yet (designed, see §9-11)
 
 - Agent 7 (Knowledge Agent): deterministic tactic tagging + reference graph + strategy KB (waiting for first pipeline output)
 - Librarian semantic search: three-layer stack (embeddings → Loogle → LLM)
