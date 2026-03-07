@@ -203,14 +203,24 @@ def _is_goedel_model(model: str) -> bool:
 
 
 def _extract_lean_code(response: str) -> str:
-    """Extract Lean code from response, stripping any markdown fences."""
+    """Extract Lean code from response, stripping markdown fences and headers."""
     text = response.strip()
+
+    # Strip markdown code fences
     if text.startswith("```"):
         lines = text.split("\n")
-        # Remove first and last fence lines
         lines = [l for l in lines[1:] if not l.strip() == "```"]
         text = "\n".join(lines)
-    return text.strip()
+
+    # Strip Goedel-style markdown headers (### Lean 4 Proof, ### Lean 4 Code, etc.)
+    lines = text.split("\n")
+    lines = [l for l in lines if not l.strip().startswith("### ")]
+
+    # Strip leading comment lines that aren't Lean code
+    while lines and lines[0].strip().startswith("--") and "import" not in lines[0]:
+        lines.pop(0)
+
+    return "\n".join(lines).strip()
 
 
 # ---------------------------------------------------------------------------
