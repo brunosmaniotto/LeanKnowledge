@@ -234,8 +234,9 @@ def _build_goedel_retry_prompt(
 
 
 def _is_goedel_model(model: str) -> bool:
-    """Check if a model string refers to a Goedel-Prover variant."""
-    return "goedel" in model.lower() or "Goedel" in model
+    """Check if a model string refers to a Goedel-Prover variant (or its adapter)."""
+    lower = model.lower()
+    return "goedel" in lower or "translator_v" in lower
 
 
 def _extract_lean_code(response: str) -> str:
@@ -394,8 +395,15 @@ class TranslatorAgent:
                 else:
                     prompt = _build_retry_prompt(proof, triples)
 
-            # Call LLM
-            response = complete(model, prompt, system=system, max_tokens=max_tokens)
+            # Call LLM (catch API errors like context overflow → escalate)
+            try:
+                response = complete(model, prompt, system=system, max_tokens=max_tokens)
+            except Exception as e:
+                err_msg = str(e)
+                if "context length" in err_msg or "input_tokens" in err_msg:
+                    print(f"    Attempt {attempt_num}: SKIP — context overflow, escalating")
+                    return None  # escalate to next tier
+                raise  # re-raise unexpected errors
             lean_code = _extract_lean_code(response)
 
             # Reject empty or trivially vacuous code
