@@ -152,7 +152,7 @@ def _proof_to_nl(proof: StructuredProof) -> str:
         parts.append("**Assumptions**:")
         for a in proof.assumptions:
             hint = f" : {a.lean_type_hint}" if a.lean_type_hint else ""
-            parts.append(f"- {a.name}{hint}: {a.description}")
+            parts.append(f"- {a.name}{hint}: {a.statement}")
 
     parts.append("**Proof**:")
     for step in proof.steps:
