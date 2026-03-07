@@ -15,6 +15,7 @@ the openai/ prefix (e.g., openai/Goedel-LM/Goedel-Prover-V2-8B).
 
 import json
 import os
+import time
 
 import litellm
 
@@ -62,8 +63,18 @@ def complete(
         kwargs["api_base"] = api_base
         kwargs["api_key"] = "dummy"  # vLLM doesn't need a real key
 
-    response = litellm.completion(**kwargs)
-    return response.choices[0].message.content
+    # Retry on rate limits with exponential backoff
+    for attempt in range(5):
+        try:
+            response = litellm.completion(**kwargs)
+            return response.choices[0].message.content
+        except Exception as e:
+            if "rate_limit" in str(e).lower() and attempt < 4:
+                wait = 30 * (2 ** attempt)  # 30s, 60s, 120s, 240s
+                print(f"    [LLM] Rate limited, waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            raise
 
 
 def complete_json(
