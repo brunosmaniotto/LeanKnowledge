@@ -204,23 +204,40 @@ def _is_goedel_model(model: str) -> bool:
 
 def _extract_lean_code(response: str) -> str:
     """Extract Lean code from response, stripping markdown fences and headers."""
+    import re
     text = response.strip()
 
-    # Strip markdown code fences
-    if text.startswith("```"):
-        lines = text.split("\n")
-        lines = [l for l in lines[1:] if not l.strip() == "```"]
-        text = "\n".join(lines)
+    # Try to extract code from markdown fences (```lean, ```lean4, or plain ```)
+    fence_match = re.search(r"```(?:lean4?|lean)?\s*\n(.*?)```", text, re.DOTALL)
+    if fence_match:
+        text = fence_match.group(1)
 
     # Strip Goedel-style markdown headers (### Lean 4 Proof, ### Lean 4 Code, etc.)
     lines = text.split("\n")
     lines = [l for l in lines if not l.strip().startswith("### ")]
+    # Also strip any remaining ``` lines
+    lines = [l for l in lines if not l.strip().startswith("```")]
 
-    # Strip leading comment lines that aren't Lean code
-    while lines and lines[0].strip().startswith("--") and "import" not in lines[0]:
-        lines.pop(0)
+    # Find the first line that looks like Lean code (import, theorem, def, etc.)
+    start = 0
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped and (
+            stripped.startswith("import ")
+            or stripped.startswith("open ")
+            or stripped.startswith("theorem ")
+            or stripped.startswith("lemma ")
+            or stripped.startswith("def ")
+            or stripped.startswith("axiom ")
+            or stripped.startswith("noncomputable")
+            or stripped.startswith("section")
+            or stripped.startswith("namespace")
+            or stripped.startswith("--")
+        ):
+            start = i
+            break
 
-    return "\n".join(lines).strip()
+    return "\n".join(lines[start:]).strip()
 
 
 # ---------------------------------------------------------------------------
