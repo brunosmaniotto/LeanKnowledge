@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Data (large indices, not committed)
+data/
+
+# Outputs — ignore failures, triples, logs (keep lean/ and rosetta)
+outputs/**/failures/
+outputs/**/triples/
+outputs/**/*.json
+outputs/**/*.log
+outputs/run_scripts/
+
+# Lean build artifacts
+.lake/
+lake-packages/
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code (keep instructions.md, ignore user state)
+.claude/*
+!.claude/instructions.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keys / secrets
+.env
+vertex-key.json
+
+# Large files
+*.tar.gz
+*.pdf
+
+# Downloaded papers/books (local only, too large for git)
+papers/
+books/
+
+# Output analysis docs (may contain personal paths or stale numbers)
+outputs/**/*.md
+!outputs/benchmarks/README.md
+outputs/STATUS.md
+
+# Screenshots (may contain copyrighted content)
+outputs/**/screenshots/
+
+# Internal dev files (kept locally, not published)
+CLAUDE.md
+JOURNAL.md
+RUN_MWG.md
+src/leanknowledge/paper_downloader_mcp.py
+scripts/aggregate_worker_run.py
+scripts/analyze_all_failures.py
+scripts/analyze_failures.py
+scripts/build_graph.py
+scripts/extract_axiom_inbox.py
+scripts/extract_missing_modules.py
+scripts/gcp_setup.sh
+scripts/reset_olean_failures.py
+scripts/scan_axioms.py
+scripts/retry_mathematical_stubs.sh
+scripts/retry_stubs.py
+scripts/run_librarian_on_axioms.py
+scripts/scan_deferred_axioms.py
+scripts/test_search_quality.py
+
+# Pytest cache
+.pytest_cache/
