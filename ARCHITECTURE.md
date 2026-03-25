@@ -816,6 +816,7 @@ Raw citation count favors review papers and old papers. PageRank captures *struc
 | — | ProofWiki Adapter | NaturalProofs dataset → backlog | 17,911 theorems, bypasses Agents 1-4 |
 | — | Backlog | work queue | No blocking — axiomatize at proof time. Dependency tracking for info only |
 | — | Lean compiler | `lean` binary wrapper | REPL (cached paths) + cold start, error parsing, 3-tier repair DB |
+| — | Config | model routing + roll call | TOML config files, env var overrides, pre-run model identity verification |
 | — | Pipeline | orchestrator + CLI | `extract`, `next`, `run`, `status`. Training triple collection |
 | — | Pool runner | parallel formalization | File-locked work queue, 20 workers, auto-requeue operational failures (up to 3 retries) |
 | — | OpenAlex client | citation graph | 364K papers, 2.7M edges, PageRank ranking, PDF download |
@@ -861,6 +862,17 @@ Deterministic pre-compilation pass (`lean/pre_compiler.py`) that validates and f
 - **Deprecated patterns:** Replaces `ExistsUnique` with `∃!`
 
 Fixes are applied silently and don't count as an attempt — the pre-compiler improves code before it reaches the compiler.
+
+### Configuration and model roll call
+
+Model assignments are centralized in `run_config.toml` (see also `run_config_free.toml` for zero-cost CLI profiles). The config system (`config.py`) loads a TOML file, applies environment variable overrides, and patches already-imported module globals — so the config takes effect even though agent modules read their defaults at import time.
+
+Before any token-spending command, the pipeline runs a **model roll call**: it sends a lightweight identity probe to each unique configured model. Each model responds with its self-reported name and version. This catches:
+- **Typos in model strings** that silently fall back to a default model
+- **Connectivity issues** (missing API keys, unreachable endpoints, CLI tools not installed)
+- **Wrong model versions** (e.g., configuring Sonnet but getting Opus due to a default)
+
+The roll call displays a table showing what was configured vs. what actually responded, and prompts for confirmation before proceeding. Use `--yes` to skip the prompt or `--skip-roll-call` to skip entirely.
 
 ### What's not built yet (designed, see §9-11)
 

@@ -76,6 +76,7 @@ Full design doc: [`ARCHITECTURE.md`](ARCHITECTURE.md)
 src/leanknowledge/
 |-- agents/           # 6 agents (translator.py is the core)
 |-- lean/             # Compiler interface, pre-compiler, repair DB
+|-- config.py         # Centralized model config (TOML) + pre-run roll call
 |-- llm.py            # Unified LLM gateway (LiteLLM + CLI backends)
 |-- mathlib_index.py  # 207K-declaration RAG index
 |-- openalex.py       # Citation graph: fetch, PageRank, download
@@ -95,14 +96,21 @@ pip install -e ".[test,openalex]"
 # Run tests
 pytest tests/ -q
 
-# Build citation graph
-python scripts/fetch_openalex.py all --concept C175444787 --min-citations 100 --output data/openalex
+# Configure models (edit run_config.toml or use the free CLI profile)
+leanknowledge run --config run_config_free.toml \
+  --lean-project ~/lean-project \
+  --output outputs/my_run
 
-# ProofWiki benchmark (requires Lean 4 + Mathlib + API keys)
-python scripts/run_proofwiki.py --data data/proofwiki.json --lean-project ~/lean-project --max 10
+# The pipeline runs a model roll call before starting — each configured
+# model is probed to verify its identity, catching typos and silent
+# fallbacks before any real tokens are spent.
 ```
 
-**Requirements:** Python 3.12+, Lean 4 + Mathlib via [elan](https://github.com/leanprover/elan), API keys for DeepSeek (`DEEPSEEK_API_KEY`), Anthropic (`ANTHROPIC_API_KEY`), and Google/Vertex AI (`GOOGLE_APPLICATION_CREDENTIALS`). Or use free CLI backends (`cli/claude`, `cli/gemini`).
+**Requirements:** Python 3.12+, Lean 4 + Mathlib via [elan](https://github.com/leanprover/elan).
+
+**Model backends** (configure in `run_config.toml`):
+- API: DeepSeek (`DEEPSEEK_API_KEY`), Anthropic (`ANTHROPIC_API_KEY`), Google/Gemini
+- CLI (free): `cli/claude` (Anthropic subscription), `cli/gemini` (Google subscription)
 
 ## Output organization
 
