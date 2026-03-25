@@ -939,10 +939,18 @@ class Pipeline:
 def main():
     import argparse
 
+    from .config import load_config, apply_config, roll_call
+
     parser = argparse.ArgumentParser(
         prog="leanknowledge",
         description="LeanKnowledge formalization pipeline",
     )
+    parser.add_argument("--config", default=None,
+                        help="Path to TOML config file (default: run_config.toml)")
+    parser.add_argument("--yes", "-y", action="store_true",
+                        help="Skip roll call confirmation prompt")
+    parser.add_argument("--skip-roll-call", action="store_true",
+                        help="Skip model roll call entirely")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     def add_common(p):
@@ -1056,6 +1064,23 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # --- Load config (before any imports that read env vars) ---
+    config_path = Path(args.config) if args.config else (PROJECT_ROOT / "run_config.toml")
+    cfg = load_config(config_path if config_path.exists() else None)
+    apply_config(cfg)
+
+    # --- Roll call for commands that spend LLM tokens ---
+    _llm_commands = {"extract", "next", "run", "retry", "feed"}
+    if args.command in _llm_commands and not args.skip_roll_call:
+        all_ok = roll_call(cfg)
+        if not args.yes:
+            if not all_ok:
+                print("  Some models failed. Fix configuration or use --yes to proceed anyway.")
+            answer = input("\n  Proceed? [Y/n] ").strip().lower()
+            if answer and answer != "y":
+                print("  Aborted.")
+                return
 
     # --- scan-axioms command: skip heavy pipeline init ---
     if args.command == "scan-axioms":

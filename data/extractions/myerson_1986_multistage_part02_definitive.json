@@ -1,0 +1,888 @@
+{
+  "source": "crawford_sobel_1982_strategic_info_part02",
+  "items": [
+    {
+      "id": "Def_4_a",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The set T of all possible outcomes (type profiles) of the game is defined by the positive-probability condition: t is in T if and only if there exists some c in C such that p₁(t₁) · ∏_{k=1}^{K} p_{k+1}(t_{k+1} | c_k, t_{≤k}) > 0.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "This defines the set T of feasible type profiles as those reachable with positive probability under some action sequence. The text begins mid-sentence: 'To justify our interpretation of T as the set of all possible outcomes of the game, we assume that t is in T if and only if there exists some c in C such that...'",
+      "notation_in_scope": {
+        "T": "set of all possible type profiles (outcomes)",
+        "C": "set of all action profiles",
+        "p₁(t₁)": "probability of initial type profile t₁",
+        "p_{k+1}(t_{k+1} | c_k, t_{≤k})": "transition probability of stage k+1 types given stage k actions and prior types",
+        "K": "number of stages in the game"
+      }
+    },
+    {
+      "id": "Axiom_4_a",
+      "type": "axiom",
+      "role": "definition",
+      "statement": "Transition probability normalization: For every k ≥ 1, every c_k ∈ C_k, and every t_{≤k} ∈ T_{≤k}, we have ∑_{t ∈ T} p_{k+1}(t_{k+1} | c_k, t_{≤k}) = 1.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Standing assumption on the transition probabilities: they form a proper probability distribution over next-stage types for each history of actions and prior types.",
+      "notation_in_scope": {
+        "p_{k+1}": "transition probability function for stage k+1",
+        "C_k": "action space at stage k",
+        "T_{≤k}": "type profiles up to stage k"
+      }
+    },
+    {
+      "id": "Axiom_4_b",
+      "type": "axiom",
+      "role": "definition",
+      "statement": "Initial probability normalization: ∑_{t₁ ∈ T₁} p₁(t₁) = 1.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The initial type distribution p₁ sums to 1 over T₁.",
+      "notation_in_scope": {
+        "p₁": "initial probability distribution over first-stage types",
+        "T₁": "set of first-stage type profiles"
+      }
+    },
+    {
+      "id": "Def_4_b",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The preferences of player i are characterized by a von Neumann–Morgenstern utility function on T: u_i : T → ℝ.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The final information states in T record both action-choices in C and signals in the sets R_k, so each player's payoff can depend on all signals and actions.",
+      "notation_in_scope": {
+        "u_i": "von Neumann–Morgenstern utility function for player i",
+        "T": "set of all possible type profiles"
+      }
+    },
+    {
+      "id": "Def_4_c",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The multistage game Γ is the structure Γ = (((C_{ik})_{k=1}^{K}, T_{ik})_{k=1}^{K+1}, u_i)_{i=1}^{n}, T, (p_k)_{k=1}^{K+1}).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a", "Axiom_4_a", "Axiom_4_b", "Def_4_b"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "This collects all the components — action spaces, type spaces, utility functions, type space, and transition probabilities — into the formal game structure.",
+      "notation_in_scope": {
+        "Γ": "the multistage game",
+        "C_{ik}": "action space for player i at stage k",
+        "T_{ik}": "type space for player i at stage k",
+        "n": "number of players"
+      }
+    },
+    {
+      "id": "Axiom_4_c",
+      "type": "axiom",
+      "role": "definition",
+      "statement": "Standing assumption: the sets C_{ik} and T_{ik} are all finite, for every player i and every stage k.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_c"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Stated as: 'We assume throughout this paper that the sets C^k and T^k_i are all finite.' This finiteness assumption is essential for the compact-polyhedron structure of the communication equilibrium set.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_4_a",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "None of the results in this paper depends on the assumption that the set of actions available to a player at any given stage is independent of his type. Given any game in which the feasible action sets C_{ik}(t_{ik}) depend on player i's type t_{ik}, one can construct an equivalent game in which the sets of feasible actions are independent of type, by relabeling actions using a common set of labels (if the sets have equal cardinality) or by adding irrelevant duplicates of existing actions (if the cardinalities differ).",
+      "proof": null,
+      "proof_sketch": "If |C_{ik}(t_{ik})| is the same for all types, relabel actions to use a common label set C_k with no significance attached to identifications across types. If cardinalities differ, add duplicate actions with the same payoff and observational effects to equalize cardinalities, then relabel.",
+      "dependencies": ["Def_4_c", "Axiom_4_c"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Stated parenthetically: 'To keep the notation from being even more complicated, we have assumed that the set of actions available to a player at any given stage is independent of his type. However, none of the results in this paper depends on this assumption.'",
+      "notation_in_scope": {
+        "C_{ik}(t_{ik})": "type-dependent feasible action set for player i at stage k"
+      }
+    },
+    {
+      "id": "Def_4_d",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A mediator is an intermediary helping the players coordinate their actions. In each stage k, the mediator first asks each player i to report his new information in T_{ik}, and then recommends some action in C_{ik} to each player i. All players communicate confidentially with the mediator, so that no player directly observes the reports or recommendations of the other players.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_c"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Introduces the central construct of the paper: a trusted intermediary who collects private reports and issues private recommendations.",
+      "notation_in_scope": {
+        "T_{ik}": "set of possible new information for player i at stage k",
+        "C_{ik}": "set of possible actions for player i at stage k"
+      }
+    },
+    {
+      "id": "Def_4_e",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The mediator constrains each player i to choose reports so that, at each stage k, the sequence of past reports forms a vector in T_{i}^{≤k}, which is the set of possible information states for player i up to the beginning of stage k. (T_{i}^{≤k} may be a proper subset of ×_{ℓ=1}^{k} T_{iℓ}.) Any sequence of reports outside of T_{i}^{≤k} would obviously include lies. The mediator enforces this by designating a default member of the set, so that any out-of-set report is interpreted as the designated report.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_d"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "This constraint on the report space is important: the mediator limits the space of reports to eliminate obviously dishonest report sequences.",
+      "notation_in_scope": {
+        "T_{i}^{≤k}": "set of possible information states for player i up to stage k"
+      }
+    },
+    {
+      "id": "Def_4_f",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The set of possible joint report sequences from all players in the first k stages is T^{≤k} = ∏_{i=1}^{n} T_{i}^{≤k}. Note that T^{≤k} may be a proper subset of T_{≤k} (the mediator cannot always constrain players to send joint report-sequences in T_{≤k} without conveying information about each other's reports). We also let T^{≤K+1} = ∏_{i=1}^{n} T_i.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_e"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The distinction between T^{≤k} (product of individual report spaces) and T_{≤k} (joint type space constrained by game dynamics) is subtle but important.",
+      "notation_in_scope": {
+        "T^{≤k}": "product of individual report spaces ∏_i T_i^{≤k}",
+        "T_{≤k}": "joint type space up to stage k (may be smaller)",
+        "T^{≤K+1}": "full product of individual type spaces ∏_i T_i"
+      }
+    },
+    {
+      "id": "Def_4_g",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The set of feedback rules that the mediator could use is F = {f = (f_k)_{k=1}^{K} | f_k : T^{≤k} → C_k, ∀k}. If the mediator uses feedback rule f ∈ F, then f_{ik}(t^{≤k}) is the recommended action for player i at stage k when t^{≤k} is the history of reports from all players to the mediator. (Here f_k(t^{≤k}) = (f_{1k}(t^{≤k}), …, f_{nk}(t^{≤k})).)",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_f"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Feedback rules map reported type histories to recommended actions for each player at each stage.",
+      "notation_in_scope": {
+        "F": "set of all feedback rules",
+        "f_k": "feedback rule component at stage k, mapping T^{≤k} to C_k",
+        "f_{ik}(t^{≤k})": "recommended action for player i at stage k"
+      }
+    },
+    {
+      "id": "Def_4_h",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Notation: we write c = f(t) iff c_{ik} = f_{ik}(t^{≤k}) for every player i and every stage k.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_g"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Shorthand for saying that the action profile c is the one prescribed by feedback rule f when the full type profile is t.",
+      "notation_in_scope": {
+        "c": "action profile",
+        "f(t)": "shorthand for the full action profile prescribed by f given type profile t"
+      }
+    },
+    {
+      "id": "Def_4_i",
+      "type": "definition",
+      "role": "definition",
+      "statement": "For any f ∈ F and t ∈ T, let P(t | f) denote the probability that t will be the final state of all players' information if the players coordinate their actions according to the rule f, being honest and obedient to the mediator at every stage: P(t | f) = p₁(t₁) · ∏_{k=1}^{K} p_{k+1}(t_{k+1} | f_k(t^{≤k}), t_{≤k}).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a", "Def_4_g", "Def_4_h"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The outcome probability under honest and obedient play.",
+      "notation_in_scope": {
+        "P(t | f)": "probability of type profile t under feedback rule f with honest/obedient play"
+      }
+    },
+    {
+      "id": "Claim_4_b",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "By definition of T, for every t in T there exists some f in F such that P(t | f) > 0.",
+      "proof": null,
+      "proof_sketch": "This follows directly from the definition of T (Def_4_a): t ∈ T iff there exists c ∈ C with positive probability, and c can be realized by the constant feedback rule f that always recommends c.",
+      "dependencies": ["Def_4_a", "Def_4_i"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Stated in the text as: 'Notice that, by definition of T, for every t in T there exists some f in F such that P(t|f) > 0.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_4_j",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The expected utility payoff for player i under feedback rule f is U_i(f) = ∑_{t ∈ T} P(t | f) · u_i(t).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_b", "Def_4_i"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Expected utility when all players are honest and obedient under feedback rule f.",
+      "notation_in_scope": {
+        "U_i(f)": "expected utility for player i under feedback rule f"
+      }
+    },
+    {
+      "id": "Def_4_k",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A manipulative strategy for player i is any pair (γ_i, τ_i) = ((γ_{ik})_{k=1}^{K}, (τ_{ik})_{k=1}^{K}) where, for each k: γ_{ik} maps C_i^{≤k} × T_i^{≤k} into C_{ik} (player i's action choice as a function of past recommendations and information), τ_{ik} maps C_i^{≤k−1} × T_i^{≤k} into T_{ik} (player i's report as a function of past recommendations and current information), and the sequence of reports (τ_{ik}(c_i^{≤k−1}, t_i^{≤ℓ}))_{ℓ=1}^{K} must remain in T_i^{≤K} for all (c_i, t_i) ∈ C_i × T_i. We let M_i denote the set of all manipulative strategies for player i.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_g", "Def_4_d"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "A manipulative strategy specifies how player i could lie about his type reports and disobey the mediator's action recommendations, subject to the constraint that the report sequence must remain in the feasible report space.",
+      "notation_in_scope": {
+        "γ_i": "player i's action manipulation rule (disobedience)",
+        "τ_i": "player i's report manipulation rule (lying)",
+        "M_i": "set of all manipulative strategies for player i",
+        "C_i^{≤k}": "player i's recommendation history up to stage k",
+        "T_i^{≤k}": "player i's type history up to stage k"
+      }
+    },
+    {
+      "id": "Def_4_l",
+      "type": "definition",
+      "role": "definition",
+      "statement": "For any (γ_i, τ_i) in M_i, the effective transformation f ∘ (γ_i, τ_i) is the feedback rule that would actually be implemented if the mediator tried to implement f but player i used the manipulative strategy (γ_i, τ_i) while all other players were honest and obedient. Formally, c = (f ∘ (γ_i, τ_i))(t) iff there exist s_i ∈ T_i and d_i ∈ C_i such that, for all k: s_{ik} = τ_{ik}(d_i^{≤k−1}, t_i^{≤k}), d_{ik} = f_{ik}(t_{−i}^{≤k}, s_i^{≤k}), c_{ik} = γ_{ik}(d_i^{≤k}, t_i^{≤k}), and c_{jk} = f_{jk}(t_{−i}^{≤k}, s_i^{≤k}) for all j ≠ i. (Here s_{ik} is player i's report and d_{ik} is the mediator's recommendation to player i at stage k.)",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_k", "Def_4_g"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The effective transformation captures the actual outcome when one player deviates while others play honestly.",
+      "notation_in_scope": {
+        "f ∘ (γ_i, τ_i)": "effective transformation of feedback rule f by player i's manipulative strategy",
+        "s_i": "player i's (possibly dishonest) reports to the mediator",
+        "d_i": "mediator's recommendations to player i"
+      }
+    },
+    {
+      "id": "Def_4_m",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A communication mechanism for the n players is any probability distribution μ on the set of feedback rules F, where μ(f) denotes the probability that the mediator will use rule f. The mediator may choose a feedback rule at random so that the players may not know which rule is being used.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_g"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Allows randomization by the mediator for greatest generality.",
+      "notation_in_scope": {
+        "μ": "communication mechanism (probability distribution over F)",
+        "μ(f)": "probability that the mediator uses feedback rule f"
+      }
+    },
+    {
+      "id": "Def_4_n",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A communication mechanism μ is a communication equilibrium iff, for every player i and every manipulative strategy (γ_i, τ_i) ∈ M_i: (4.1) ∑_{f ∈ F} μ(f) U_i(f) ≥ ∑_{f ∈ F} μ(f) U_i(f ∘ (γ_i, τ_i)).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_m", "Def_4_j", "Def_4_l", "Def_4_k"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The central solution concept of Section 4. No player should expect to gain ex ante by manipulating (lying or disobeying) when all others are honest and obedient.",
+      "notation_in_scope": {
+        "μ": "communication mechanism",
+        "U_i(f)": "expected utility for player i under f",
+        "f ∘ (γ_i, τ_i)": "effective transformation of f by player i's manipulation"
+      }
+    },
+    {
+      "id": "Claim_4_c",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "The incentive constraints (4.1) are linear inequalities in μ. Thus, the set of communication equilibria is a closed and convex subset of the set of communication mechanisms — specifically, it has the mathematical structure of a compact polyhedron defined by a finite collection of linear inequalities.",
+      "proof": null,
+      "proof_sketch": "Each constraint in (4.1) is of the form ∑_f μ(f) [U_i(f) − U_i(f ∘ (γ_i, τ_i))] ≥ 0, which is linear in the components μ(f). The intersection of finitely many closed half-spaces in a simplex is a compact polyhedron.",
+      "dependencies": ["Def_4_n", "Axiom_4_c"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "The text notes: 'The sets M_i and F may be enormously large in a multistage game... Nevertheless, it is helpful to know that the set of communication equilibria has the simple mathematical structure of a compact polyhedron, defined by a finite collection of linear inequalities. The set of Nash equilibria of a game has no such structural simplicity.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_4_d",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "The set of communication equilibria includes all of the Nash equilibria of the game, including irrational equilibria.",
+      "proof": null,
+      "proof_sketch": "A Nash equilibrium can be represented as a communication mechanism in which the mediator's role is trivial (each player's strategy is independent of the mediator's recommendation). The incentive constraints (4.1) then reduce to the Nash equilibrium conditions.",
+      "dependencies": ["Def_4_n"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "Stated as: 'The set of communication equilibria includes all of the Nash equilibria of the game, including irrational equilibria such as (b, c) in Example 3 above.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_4_e",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In a communication equilibrium, no player can expect to gain by manipulating after any event that is observable by him and that has positive probability of occurring. However, the communication equilibrium concept does not restrict behavior conditional on zero-probability events, motivating the need for sequential refinement.",
+      "proof": null,
+      "proof_sketch": "If an observable event E has positive probability and player i could gain by manipulating after E, then by taking the conditional expectation over E, player i would also gain ex ante, contradicting (4.1).",
+      "dependencies": ["Def_4_n"],
+      "section": "Section 4",
+      "labeled": false,
+      "context": "This observation motivates the transition from Section 4 (communication equilibrium) to Section 5 (conditional probability systems) and Section 6 (sequential communication equilibrium).",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5_a",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let Ω be any nonempty finite set, interpreted as the set of possible 'states of the world.' Let Δ(Ω) denote the set of all probability distributions on Ω. Given any distribution μ ∈ Δ(Ω), if X ⊆ Ω then μ(X) is the probability of the event X under the distribution μ.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Sets up the formal framework for conditional probability systems on a finite state space.",
+      "notation_in_scope": {
+        "Ω": "nonempty finite set of states of the world",
+        "Δ(Ω)": "set of all probability distributions on Ω",
+        "μ(X)": "probability of event X under distribution μ"
+      }
+    },
+    {
+      "id": "Def_5_b",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Standard conditional probability: If μ ∈ Δ(Ω) and Z ⊆ Ω with μ(Z) > 0, then the conditional probability of event X given Z is (5.1) μ(X | Z) = μ(X ∩ Z) / μ(Z).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_5_a"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "When μ(Z) = 0, conditional probabilities cannot be determined from the distribution μ alone, motivating the full conditional probability system.",
+      "notation_in_scope": {
+        "μ(X | Z)": "conditional probability of X given Z"
+      }
+    },
+    {
+      "id": "Def_5_c",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A conditional probability system (CPS) on Ω is any function μ̃ that specifies a nonnegative number μ̃(X | Z) for every X ⊆ Ω and every nonempty Z ⊆ Ω, satisfying: (5.2) if X ∩ Y = ∅ then μ̃(X ∪ Y | Z) = μ̃(X | Z) + μ̃(Y | Z); (5.3) μ̃(Ω | Z) = μ̃(Z | Z) = 1; (5.4) if X ⊆ Y ⊆ Z and Y ≠ ∅ then μ̃(X | Z) = μ̃(X | Y) · μ̃(Y | Z).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_5_a"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Conditions (5.2) and (5.3) assert that μ̃(· | Z) is a probability distribution over Ω concentrated on Z. Condition (5.4) is a chain rule ensuring consistency of conditional probabilities across nested conditioning events.",
+      "notation_in_scope": {
+        "μ̃(X | Z)": "conditional probability of X given Z in the CPS",
+        "X, Y, Z": "subsets of Ω"
+      }
+    },
+    {
+      "id": "Claim_5_a",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Conditions (5.2) and (5.3) together assert that μ̃(· | Z) is a probability distribution over Ω that puts all probability weight on the given set Z.",
+      "proof": null,
+      "proof_sketch": "By (5.3), μ̃(Ω | Z) = 1 (normalization) and μ̃(Z | Z) = 1 (concentration on Z). By (5.2), μ̃ is finitely additive. Together these imply μ̃(· | Z) is a probability measure on Ω supported on Z.",
+      "dependencies": ["Def_5_c"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Interpretation of the first two CPS axioms.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5_b",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If μ̃(Y | Z) > 0, then condition (5.4) reduces to μ̃(X | Y) = μ̃(X | Z) / μ̃(Y | Z), which asserts that the probability assigned to event X if event Y were known equals the probability computed for X by Bayes' formula if Y occurred when Z was already known.",
+      "proof": null,
+      "proof_sketch": "Dividing both sides of (5.4) by μ̃(Y | Z) > 0 gives μ̃(X | Y) = μ̃(X | Z) / μ̃(Y | Z), which is exactly Bayes' formula applied within the context of Z.",
+      "dependencies": ["Def_5_c"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Shows that the CPS chain rule generalizes Bayes' rule.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5_d",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let Δ*(Ω) denote the set of all conditional probability systems on Ω.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_5_c"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Notation for the set of all CPSs on Ω.",
+      "notation_in_scope": {
+        "Δ*(Ω)": "the set of all conditional probability systems on Ω"
+      }
+    },
+    {
+      "id": "Def_5_e",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Given any probability distribution η ∈ Δ(Ω), a conditional probability system μ̃ ∈ Δ*(Ω) is an extension of η iff μ̃(X | Ω) = η(X) for all X ⊆ Ω.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_5_d", "Def_5_a"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "An extension of η is a CPS whose unconditional probabilities (conditioning on the entire state space) agree with η.",
+      "notation_in_scope": {
+        "η": "a probability distribution on Ω",
+        "μ̃": "a conditional probability system extending η"
+      }
+    },
+    {
+      "id": "Claim_5_c",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If μ ∈ Δ(Ω) has full support (i.e., μ({ω}) > 0 for every ω ∈ Ω, so that μ(Z) > 0 for every nonempty Z), then the conditional probabilities defined by equation (5.1) satisfy (5.2)–(5.4), and thus constitute a conditional probability system.",
+      "proof": null,
+      "proof_sketch": "When μ(Z) > 0 for all nonempty Z, equation (5.1) is well-defined and straightforward verification shows (5.2) finite additivity, (5.3) normalization, and (5.4) the chain rule all hold.",
+      "dependencies": ["Def_5_b", "Def_5_c"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "This is the standard construction of a CPS from a full-support distribution.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5_d",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Every conditional probability system on Ω can be characterized as the limit of conditional probability systems that are constructed from full-support distributions via equation (5.1).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Claim_5_c", "Def_5_d"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Informal statement preceding Theorem 1. Theorem 1 gives the precise formulation.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Theorem_1",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "μ̃ is a conditional probability system on Ω if and only if there exists a sequence of probability distributions {η_j}_{j=1}^{∞} on Ω such that: (i) η_j({ω}) > 0 for all j and all ω ∈ Ω; and (ii) μ̃(X | Z) = lim_{j→∞} η_j(X ∩ Z) / η_j(Z) for all X ⊆ Ω and all nonempty Z ⊆ Ω.",
+      "proof": "The proof is deferred to Section 9.",
+      "proof_sketch": "The 'if' direction follows from Claim_5_c and a limit argument. The 'only if' direction constructs approximating full-support distributions. The proof appears in Section 9 of the paper.",
+      "dependencies": ["Def_5_c", "Claim_5_c"],
+      "section": "Section 5",
+      "labeled": true,
+      "context": "Formally labeled THEOREM 1. This is the key technical result connecting CPSs to limits of full-support distributions, providing the formal foundation for trembling-hand perfection in games with communication.",
+      "notation_in_scope": {
+        "μ̃": "conditional probability system on Ω",
+        "η_j": "j-th approximating full-support distribution on Ω"
+      }
+    },
+    {
+      "id": "Claim_5_e",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Theorem 1 explains the role of small mistakes or 'trembling hands' in Selten's (1975) theory of perfect equilibrium. Every outcome has positive probability in each equilibrium of Selten's perturbed games with small probabilities of mistakes. As the probabilities of mistakes go to zero, a limit of these equilibria generates a conditional probability system on the set of outcomes of the game. Each agent's strategy in the limiting equilibrium is rational for him conditional on any event that he may observe, if his beliefs in that event are as specified by the conditional probability system.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Theorem_1", "Invoked_Selten_1975"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Connects Theorem 1 to Selten's trembling hand perfection.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5_f",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In a game with communication, there is no clear reason why one should assume that players' mistakes must be stochastically independent of each other. The paper omits the independence-of-trembles assumption that Kreps and Wilson (1982) used to restrict permissible beliefs in their definition of sequential equilibrium. Nevertheless, Theorem 1 implies that conditional probability systems are equivalent to limits of perturbed games with small probabilities of (possibly correlated) mistakes.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Theorem_1", "Invoked_Kreps_Wilson_1982"],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Key methodological point: unlike Kreps-Wilson sequential equilibrium, this framework allows correlated trembles, which is natural in games with communication where a mediator coordinates actions.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_6_a",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let P(t_{>k} | f, t_{≤k}) denote the continuation probability: the probability that the information revealed in the game after stage k would be as in t_{>k} if the players used the feedback rule f. That is, P(t_{>k} | f, t_{≤k}) = ∏_{ℓ=k}^{K} p_{ℓ+1}(t_{ℓ+1} | f_ℓ(t^{≤ℓ}), t_{≤ℓ}).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_a", "Def_4_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Defines the forward-looking probability of future type realizations given a feedback rule and current history.",
+      "notation_in_scope": {
+        "P(t_{>k} | f, t_{≤k})": "continuation probability after stage k under f",
+        "t_{>k}": "type realizations after stage k",
+        "t_{≤k}": "type realizations up to and including stage k"
+      }
+    },
+    {
+      "id": "Def_6_b",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let U_i(f | t_{≤k}) denote the conditional expected utility for player i given that t_{≤k} is the state of all players' information at stage k: U_i(f | t_{≤k}) = ∑_{t_{>k}} P(t_{>k} | f, t_{≤k}) · u_i(t), where t = (t_{≤k}, t_{>k}).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_a", "Def_4_b"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "The conditional expected payoff looking forward from stage k, given the history.",
+      "notation_in_scope": {
+        "U_i(f | t_{≤k})": "conditional expected utility for player i given history t_{≤k} under f"
+      }
+    },
+    {
+      "id": "Def_6_c",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let M_i^k denote the set of manipulative strategies for player i in which he is honest and obedient in all stages before stage k: M_i^k = {(γ_i, τ_i) ∈ M_i | ∀ℓ < k, ∀c, ∀t: γ_{iℓ}(c_i^{≤ℓ}, t_i^{≤ℓ}) = c_{iℓ} and τ_{iℓ}(c_i^{≤ℓ−1}, t_i^{≤ℓ}) = t_{iℓ}}.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_k"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "If player i decided to begin manipulating for the first time at the beginning of stage k, he would have to choose a manipulative strategy in M_i^k.",
+      "notation_in_scope": {
+        "M_i^k": "set of manipulative strategies for player i that are honest and obedient before stage k"
+      }
+    },
+    {
+      "id": "Def_6_d",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let M_i^{*k} denote the set of manipulative strategies for player i in which he is honest and obedient in all stages before stage k and also reports his type honestly at the beginning of stage k: M_i^{*k} = {(γ_i, τ_i) ∈ M_i^k | ∀c, ∀t: τ_{ik}(c_i^{≤k−1}, t_i^{≤k}) = t_{ik}}.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_c"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "If player i decided to begin manipulating for the first time at the end of stage k, after reporting honestly but before choosing his action, he would choose a strategy in M_i^{*k}.",
+      "notation_in_scope": {
+        "M_i^{*k}": "set of manipulative strategies for player i that are honest/obedient before stage k and honest at the report phase of stage k"
+      }
+    },
+    {
+      "id": "Claim_6_a",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "By the revelation principle, there is no loss of generality in assuming that each player reports all of his new information at each stage and then receives in return only the recommendation of an action, because such communication systems maximize the mediator's information and minimize the player's information (and hence minimize his opportunities to find profitable ways to cheat). Without loss of generality, the vocabulary in which player i reports to the mediator at stage k is a subset of T_{ik}, and the vocabulary in which the mediator speaks to player i is a subset of C_{ik}.",
+      "proof": null,
+      "proof_sketch": "Any communication protocol can be simulated by one where the player reveals his full type and receives only an action recommendation, because additional information to the player can only expand his manipulation opportunities.",
+      "dependencies": ["Def_4_d", "Def_4_e"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Recapitulates the revelation principle argument from Section 4 in preparation for the sequential refinement.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_b",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "One cannot assume without loss of generality that the set of possible recommendations that the mediator can send to player i at stage k is always the full set C_{ik}, if one requires that honesty and obedience should be rational for every player in any event that he can perceive. The problem is that decreasing the set of possible recommendations decreases the set of possible events that i could perceive, which may make it easier to guarantee that honesty and obedience is rational in all such events.",
+      "proof": null,
+      "proof_sketch": "The text gives Example 3 as illustration: if the mediator could recommend player 2's dominated action 'c', player 2 would certainly disobey. Restricting the recommendation range eliminates such events from the player's information partition.",
+      "dependencies": ["Claim_6_a"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "This is the key conceptual insight motivating the mediation range Q: unlike the standard revelation principle for ex-ante incentive constraints, sequential rationality requires restricting the mediator's recommendation range.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_6_e",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A mediation range Q is a function that specifies, for each player i, each stage k, each type history t_i^{≤k} ∈ T_i^{≤k}, and each recommendation history c_i^{≤k−1} ∈ C_i^{≤k−1}, a set Q_i^k(c_i^{≤k−1}, t_i^{≤k}) such that Q_i^k(c_i^{≤k−1}, t_i^{≤k}) ⊆ C_{ik}. The set Q_i^k(c_i^{≤k−1}, t_i^{≤k}) is interpreted as the set of all actions that the mediator could possibly recommend to player i at the end of stage k if t_i^{≤k} is the vector of past reports from player i and c_i^{≤k−1} is the vector of past recommendations to player i.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Claim_6_b"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "The mediation range restricts the mediator's recommendations to a subset of actions, depending on the player's communication history. This restriction is needed because unrestricted recommendations could create events after which sequential rationality cannot be maintained.",
+      "notation_in_scope": {
+        "Q": "mediation range function",
+        "Q_i^k(c_i^{≤k−1}, t_i^{≤k})": "set of actions the mediator may recommend to player i at stage k given communication history"
+      }
+    },
+    {
+      "id": "Def_6_f",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Given a mediation range Q, define: Q_i = {(c_i, t_i) ∈ C_i × T_i | c_{ik} ∈ Q_i^k(c_i^{≤k−1}, t_i^{≤k}), ∀k} (the set of possible recommendation-type sequences for player i); Q^{≤k} = {(c_i^{≤k}, t_i^{≤k}) | (c_i, t_i) ∈ Q_i} (possible sequences up to the beginning of stage k); Q^{*k} = {(c_i^{≤k}, t_i^{≤k}) | (c_i, t_i) ∈ Q_i} (possible sequences up to the end of stage k); and G(Q) = {f ∈ F | f_{ik}(t^{≤k}) ∈ Q_i^k(f_i^{≤k−1}(t^{≤k−1}), t_i^{≤k}), ∀i, ∀k, ∀t ∈ T} (the set of all feedback rules satisfying the mediation range restriction for all permissible report sequences). Notice that t ranges over T in the definition of G(Q).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_e", "Def_4_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "These derived objects are essential components of the sequential communication equilibrium definition. Q_i collects all feasible communication histories for player i. G(Q) is the set of feedback rules the mediator can actually use.",
+      "notation_in_scope": {
+        "Q_i": "set of possible recommendation-type sequences for player i under Q",
+        "Q^{≤k}": "possible sequences for player i up to beginning of stage k under Q",
+        "Q^{*k}": "possible sequences for player i up to end of stage k under Q",
+        "G(Q)": "set of feedback rules consistent with mediation range Q"
+      }
+    },
+    {
+      "id": "Def_6_g",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A communication mechanism μ ∈ Δ(F) is a sequential communication equilibrium (or sequentially rational communication equilibrium) iff there exists a mediation range Q and a conditional probability system μ̃ ∈ Δ*(G(Q) × T) such that: (6.1) μ̃(f, t) = μ(f) · P(t | f), ∀f ∈ G(Q), ∀t ∈ T; (6.2) μ̃(f, t_{>k} | f^{≤k}, t_{≤k}) = μ̃(f | f^{≤k}, t_{≤k}) · P(t_{>k} | f, t_{≤k}), ∀f ∈ G(Q), ∀t ∈ T, ∀k; (6.3) ∑_{t_{−i}^{≤k} ∈ T_{−i}^{≤k}} ∑_{f ∈ G(Q)} μ̃(f, t_{≤k} | c_i^{≤k−1}, t_i^{≤k}) · U_i(f | t_{≤k}) ≥ ∑_{t_{−i}^{≤k} ∈ T_{−i}^{≤k}} ∑_{f ∈ G(Q)} μ̃(f, t_{≤k} | c_i^{≤k−1}, t_i^{≤k}) · U_i(f ∘ (γ_i, τ_i) | t_{≤k}), ∀i, ∀k, ∀(c_i^{≤k−1}, t_i^{≤k}) ∈ Q^{≤k}, ∀(γ_i, τ_i) ∈ M_i^k; (6.4) ∑_{t_{−i}^{≤k} ∈ T_{−i}^{≤k}} ∑_{f ∈ G(Q)} μ̃(f, t_{≤k} | c_i^{≤k}, t_i^{≤k}) · U_i(f | t_{≤k}) ≥ ∑_{t_{−i}^{≤k} ∈ T_{−i}^{≤k}} ∑_{f ∈ G(Q)} μ̃(f, t_{≤k} | c_i^{≤k}, t_i^{≤k}) · U_i(f ∘ (γ_i, τ_i) | t_{≤k}), ∀i, ∀k, ∀(c_i^{≤k}, t_i^{≤k}) ∈ Q^{*k}, ∀(γ_i, τ_i) ∈ M_i^{*k}. The notation conventions are: μ̃(f, t) = μ̃({(f, t)} | G(Q) × T); μ̃(f, t | f^{≤k}, t_{≤k}) = μ̃({(f, t)} | {(g, s) | ∀ℓ ≤ k, g_ℓ = f_ℓ, s_{≤ℓ} = t_{≤ℓ}}); μ̃(f | f^{≤k}, t_{≤k}) = μ̃({f} × T | {(g, s) | ∀ℓ ≤ k, g_ℓ = f_ℓ, s_{≤ℓ} = t_{≤ℓ}}); μ̃(f, t_{≤k} | c_i^{≤k−1}, t_i^{≤k}) = μ̃({(f, s) | s_{≤k} = t_{≤k}} | {(g, s) | s_i^{≤k} = t_i^{≤k}, g_i^{≤k−1}(·) produces c_i^{≤k−1} for i}), where each indicated set is a subset of G(Q) × T.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_m", "Def_6_a", "Def_6_b", "Def_6_c", "Def_6_d", "Def_6_e", "Def_6_f", "Def_5_c", "Def_4_i", "Def_4_l"],
+      "section": "Section 6",
+      "labeled": true,
+      "context": "This is the main definition of the paper, formally labeled. The four conditions require: (6.1) consistency of the CPS with the mechanism and game dynamics ex ante; (6.2) dynamics consistency — future states depend on the feedback rule as required by game dynamics; (6.3) adverse-selection incentive constraints at each stage (no gain from lying and disobeying, starting from the beginning of any stage); (6.4) moral-hazard incentive constraints at each stage (no gain from disobeying, starting from after the honest report at each stage).",
+      "notation_in_scope": {
+        "μ": "communication mechanism",
+        "Q": "mediation range",
+        "μ̃": "conditional probability system on G(Q) × T",
+        "G(Q)": "set of feedback rules consistent with Q",
+        "P(t | f)": "outcome probability under f",
+        "P(t_{>k} | f, t_{≤k})": "continuation probability",
+        "U_i(f | t_{≤k})": "conditional expected utility",
+        "M_i^k": "manipulative strategies honest before stage k",
+        "M_i^{*k}": "manipulative strategies honest before and at report of stage k",
+        "Q^{≤k}": "feasible communication histories up to beginning of stage k",
+        "Q^{*k}": "feasible communication histories up to end of stage k"
+      }
+    },
+    {
+      "id": "Claim_6_c",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Condition (6.1) implies that μ(f) = 0 for any f that is not in G(Q), since ∑_{f ∈ G(Q)} ∑_{t ∈ T} μ̃(f, t) = 1.",
+      "proof": null,
+      "proof_sketch": "By (6.1), μ̃(f, t) = μ(f) · P(t | f) for f ∈ G(Q). Summing over all f ∈ G(Q) and t ∈ T gives ∑_{f ∈ G(Q)} μ(f) = 1 (since ∑_t P(t|f) = 1). Since μ is a probability distribution on F summing to 1, the remaining probability on F \\ G(Q) must be 0.",
+      "dependencies": ["Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "The CPS is defined on G(Q) × T, so feedback rules outside G(Q) must receive zero probability.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_d",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Condition (6.1) asserts that the conditional probability system μ̃ is consistent with μ and the given dynamics of the game in all events that have positive probability ex ante.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Interpretation of condition (6.1): the CPS agrees with the product of the mechanism probability and the game dynamics probability for all positive-probability (f, t) pairs.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_e",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Condition (6.2) asserts that, given all information available in stage k (the type profile t_{≤k} known to the players and the feedback rule components f^{≤k} known to the mediator), the future states t_{>k} are expected to depend on the feedback rule as required by the given dynamics of the game when all players are honest and obedient. Condition (6.2) also implies that future actions by the players are not expected to influence the feedback rule.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Interpretation of condition (6.2): dynamics consistency — the CPS respects the game's transition probabilities at every stage.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_f",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Condition (6.3) contains the informational or adverse-selection incentive constraints for each stage: at the beginning of each stage k, given any history of recommendations and observations in Q^{≤k}, player i should not expect to gain by starting to use a manipulative strategy of lying and disobedience if he has never lied to the mediator before.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Interpretation of condition (6.3): prevents profitable deviations starting from the report phase of each stage.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_g",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Condition (6.4) contains the strategic or moral-hazard incentive constraints for each stage: at the end of stage k, given any history of recommendations and observations in Q^{*k}, player i should not expect to gain by starting to use a manipulative strategy of disobedience if he has never lied before.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Interpretation of condition (6.4): prevents profitable deviations starting from the action phase of each stage, after honest reporting.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_h",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Conditions (6.3) and (6.4) together guarantee that, for any event that player i could perceive in the course of the game when the mediator restricts his recommendations to those permitted by Q, it is always rational for player i to be honest and obedient if he has never lied before. The beliefs specified by μ̃ guarantee that no player would ever want to disobey or lie to the mediator, even after zero-probability events in which some players (not including i) have lied and some players (possibly including i) have disobeyed the mediator in the past.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Claim_6_f", "Claim_6_g", "Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "The key consequence of the sequential communication equilibrium conditions: rationality is maintained even after zero-probability events, which is precisely the strengthening over communication equilibrium.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_i",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Dishonesty is fundamentally different from disobedience: no player could ever observe anything that would prove to him that another player had lied (since players communicate confidentially with the mediator), but players can directly observe each other's actions (since t_k may depend on c_{k−1}). Thus, if player j observed that player i used an action c_{ik−1} that is not in the mediation range, player j would know that player i had disobeyed the mediator.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_6_e", "Def_4_d"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "This asymmetry between observability of dishonesty and disobedience is the reason the SCE definition need not specify beliefs after dishonesty events.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_j",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "There is nothing to prevent us from assuming that every player always assigns probability zero to the event that any other players have lied to the mediator. Under this assumption, no player ever cares about what a dishonest player would do or believe. This is why the definition of sequential communication equilibrium does not specify what a player would do or believe if he found that he had accidentally lied at some previous stage.",
+      "proof": null,
+      "proof_sketch": "Since no player can observe another's reports (confidential communication), no event that a player could perceive is explained only by another player having lied. So the zero-probability-of-lying assumption is without loss of generality for specifying beliefs.",
+      "dependencies": ["Claim_6_i"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Justifies the asymmetric treatment of dishonesty and disobedience in the SCE definition.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_k",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "By the revelation principle, allowing players to assign positive probability to the event that others have lied to the mediator would not yield a larger set of sequentially rational communication equilibria. Given any mechanism in which a player lies with positive probability after some event, there is an equivalent mechanism in which the player does not lie and the mediator makes recommendations exactly as if the player had lied in the given mechanism.",
+      "proof": null,
+      "proof_sketch": "If player i lies with positive probability in some mechanism, the mediator can incorporate that lying behavior into the feedback rule, producing an equivalent mechanism where i reports honestly but the mediator adjusts recommendations to replicate the original effective outcome.",
+      "dependencies": ["Claim_6_j", "Def_6_g"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Completes the justification for restricting attention to mechanisms where players always report honestly in equilibrium.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_l",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Existence of sequential communication equilibria is easy to verify for finite games: any sequential equilibrium in the sense of Kreps and Wilson (1982) is a sequential communication equilibrium.",
+      "proof": null,
+      "proof_sketch": "A Kreps-Wilson sequential equilibrium satisfies sequential rationality at every information set with beliefs given by a consistent assessment. This implies all the conditions (6.1)-(6.4) when the mechanism is the trivial one corresponding to the equilibrium strategy profile.",
+      "dependencies": ["Def_6_g", "Invoked_Kreps_Wilson_1982"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Establishes non-emptiness of the SCE set for finite games by embedding Kreps-Wilson sequential equilibria.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_6_m",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Conditions (6.1)–(6.4) imply condition (4.1), so every sequential communication equilibrium is indeed a communication equilibrium. That is, SCE ⊆ CE.",
+      "proof": null,
+      "proof_sketch": "Summing the stage-by-stage incentive constraints (6.3)–(6.4) over all stages and integrating over all type histories using the CPS μ̃ recovers the ex-ante incentive constraint (4.1).",
+      "dependencies": ["Def_6_g", "Def_4_n"],
+      "section": "Section 6",
+      "labeled": false,
+      "context": "Confirms that the sequential refinement is indeed a refinement: every SCE satisfies the weaker CE conditions.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_7_a",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let B be a correspondence that specifies sets B(t_{ik}) such that (7.1) B(t_{ik}) ⊆ C_{ik}, for all players i, all stages k, and all t_{ik} ∈ T_{ik}.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_c"],
+      "section": "Section 7",
+      "labeled": false,
+      "context": "B maps each player's type at each stage to a subset of that player's action set. The interpretation (developed later in the paper) is that B(t_{ik}) is the set of codominated actions for player i of type t_{ik} at stage k.",
+      "notation_in_scope": {
+        "B": "correspondence from type profiles to subsets of actions",
+        "B(t_{ik})": "subset of actions for player i at stage k given type profile t_{ik}",
+        "C_{ik}": "action space for player i at stage k"
+      }
+    },
+    {
+      "id": "Def_7_b",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Given any such correspondence B, define E^k(B) = {f ∈ F | ∀i, ∀ℓ > k, ∀t̃ ∈ T̃_{≤ℓ}: f_{iℓ}(t̃^{≤ℓ}) ∉ B(t̃_{iℓ})}. That is, E^k(B) is the set of all feedback rules that would never recommend actions in B(t̃_{iℓ}) to any type t̃_{iℓ} of any player i at any stage ℓ that comes after stage k, even if players other than i lied. (Notice that t̃ ranges over T̃ — the product of individual type spaces — not just T, in condition (7.2).)",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_7_a", "Def_4_g"],
+      "section": "Section 7",
+      "labeled": false,
+      "context": "E^k(B) restricts feedback rules so that after stage k, no B-listed action is ever recommended, regardless of what reports the players actually send (including dishonest reports). The use of T̃ rather than T is significant: it ensures robustness to lying.",
+      "notation_in_scope": {
+        "E^k(B)": "set of feedback rules that avoid B-actions after stage k",
+        "T̃_{≤ℓ}": "product of individual type spaces up to stage ℓ (allows for dishonest reports)"
+      }
+    },
+    {
+      "id": "Def_7_c",
+      "type": "definition",
+      "role": "definition",
+      "statement": "For any c_{ik} ∈ C_{ik} and any s_i^{≤k} ∈ T_i^{≤k}, define Θ_i^k(c_{ik}, s_i^{≤k}) = {(f, t_{≤k}) ∈ F × T_{≤k} | t_i^{≤k} = s_i^{≤k}, f_{ik}(t^{≤k}) = c_{ik}}. That is, Θ_i^k(c_{ik}, s_i^{≤k}) is the set of pairs consisting of a feedback rule and a stage-k type profile such that player i's type history is s_i^{≤k} and player i's recommended action is c_{ik}.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": ["Def_4_g"],
+      "section": "Section 7",
+      "labeled": false,
+      "context": "This set isolates the event where player i of type s_i^{≤k} is recommended action c_{ik}. It is used in the codomination conditions (7.3) and (7.4) that appear later in the paper.",
+      "notation_in_scope": {
+        "Θ_i^k(c_{ik}, s_i^{≤k})": "event set where player i has type history s_i^{≤k} and is recommended c_{ik} at stage k"
+      }
+    },
+    {
+      "id": "Invoked_Selten_1975",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Selten, R. (1975), 'Reexamination of the Perfectness Concept for Equilibrium Points in Extensive Games,' International Journal of Game Theory, 4, 25–55. Defines the concept of (trembling-hand) perfect equilibrium: an equilibrium of a game is perfect if it is the limit of equilibria of perturbed games in which every strategy is played with some minimum positive probability.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "Section 5",
+      "labeled": false,
+      "context": "Referenced as Selten [12]. Theorem 1 provides the formal connection between conditional probability systems and Selten's trembling-hand perfection framework.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Invoked_Kreps_Wilson_1982",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Kreps, D. M., and R. Wilson (1982), 'Sequential Equilibria,' Econometrica, 50, 863–894. Defines sequential equilibrium: a strategy profile and belief system (assessment) such that (i) strategies are sequentially rational given beliefs, and (ii) beliefs are consistent with strategies in the sense of being limits of beliefs generated by totally mixed strategy perturbations with independent trembles.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "Sections 5–6",
+      "labeled": false,
+      "context": "Referenced as Kreps and Wilson [4]. Myerson's framework generalizes Kreps-Wilson by (a) allowing correlated trembles (appropriate for games with communication) and (b) extending to mediated mechanisms rather than just direct play.",
+      "notation_in_scope": {}
+    }
+  ]
+}

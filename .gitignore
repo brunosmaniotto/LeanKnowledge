@@ -7,8 +7,10 @@ build/
 .venv/
 venv/
 
-# Data (large indices, not committed)
-data/
+# Data (large indices, not committed — see data/README.md)
+data/*
+!data/extractions/
+!data/README.md
 
 # Outputs — ignore failures, triples, logs (keep lean/ and rosetta)
 outputs/**/failures/
@@ -41,9 +43,12 @@ vertex-key.json
 *.tar.gz
 *.pdf
 
+# Archive (translator_v0 weights, old backups — local only)
+archive/
+
 # Downloaded papers/books (local only, too large for git)
-papers/
-books/
+data/books/
+data/papers/
 
 # Output analysis docs (may contain personal paths or stale numbers)
 outputs/**/*.md

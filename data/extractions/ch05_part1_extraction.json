@@ -1,0 +1,1152 @@
+{
+  "source": "Jehle & Reny — Ch05 General Equilibrium Part1",
+  "items": [
+    {
+      "id": "Implicit_Def_5.0_exchange_economy",
+      "type": "definition",
+      "role": "definition",
+      "statement": "An exchange economy E = (≿^i, e^i)_{i∈I} consists of: a finite set of consumers I = {1, ..., I}; n goods; for each consumer i ∈ I, a preference relation ≿^i over R^n_+; and a non-negative endowment vector e^i = (e^i_1, ..., e^i_n) ∈ R^n_+. There is no production. Each consumer is endowed by nature with a bundle of goods and may trade voluntarily.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Introduced informally at the opening of Section 5.1 before the formal two-consumer setup, then generalised to I consumers and n goods on pages 215-216.",
+      "notation_in_scope": {
+        "I": "finite index set of consumers {1,...,I}",
+        "n": "number of goods",
+        "e^i": "endowment vector of consumer i",
+        "≿^i": "preference relation of consumer i",
+        "E": "exchange economy (≿^i, e^i)_{i∈I}"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_endowment",
+      "type": "definition",
+      "role": "definition",
+      "statement": "An endowment e^i = (e^i_1, ..., e^i_n) ∈ R^n_+ is the non-negative vector of goods with which consumer i is initially endowed by nature prior to any trade. The aggregate endowment is Σ_{i∈I} e^i.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Used throughout; superscripts denote consumers, subscripts denote goods.",
+      "notation_in_scope": {
+        "e^i": "endowment of consumer i",
+        "e^i_k": "endowment of consumer i in good k",
+        "Σ_{i∈I} e^i": "aggregate endowment vector"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_two_consumer_notation",
+      "type": "definition",
+      "role": "definition",
+      "statement": "In the two-consumer, two-good case: consumer 1 has endowment e^1 = (e^1_1, e^1_2) and consumer 2 has endowment e^2 = (e^2_1, e^2_2). The total amount of each good available is summarised by the vector e^1 + e^2 = (e^1_1 + e^2_1, e^1_2 + e^2_2). Superscripts denote consumers and subscripts denote goods.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Introduced on page 213 to simplify exposition before the general I-consumer case.",
+      "notation_in_scope": {
+        "e^1": "endowment of consumer 1",
+        "e^2": "endowment of consumer 2",
+        "superscript": "consumer index",
+        "subscript": "good index"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_voluntary_exchange",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Voluntary, non-coercive trade is the only means by which commodities may be redistributed from the initial endowment distribution. Consumers are self-interested and will only accept a trade if it makes them at least as well off. Private ownership is admitted; agents may consume their endowment or engage in barter exchange.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Foundational assumption of the exchange economy model stated on page 213.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Def_5.0_barter_equilibrium",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A barter equilibrium is a rest point of the process of voluntary exchange: a feasible allocation x ∈ F(e) such that no consumer or group of consumers has an incentive or ability to deviate from x through voluntary trade. Equivalently (as shown), barter equilibria are precisely the unblocked feasible allocations, i.e., the core C(e).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_exchange_economy",
+        "Def_5.1_feasible_allocations",
+        "Def_5.3_core"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Introduced informally on page 213 as 'rest points' of voluntary exchange; its precise characterisation is developed through Claims 5.1_a through 5.1_d.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations",
+        "C(e)": "the core"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_edgeworth_box",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The Edgeworth box is a geometric device for representing all feasible allocations in a two-consumer, two-good exchange economy. Its dimensions are e^1_1 + e^2_1 (width) by e^1_2 + e^2_2 (height). Consumer 1's consumption is measured from the bottom-left origin and consumer 2's from the top-right origin. Every interior point of the box represents a feasible allocation.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_two_consumer_notation",
+        "Def_5.1_feasible_allocations"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Discussed on pages 214-215 as the standard geometric tool for the two-consumer case.",
+      "notation_in_scope": {
+        "width": "e^1_1 + e^2_1",
+        "height": "e^1_2 + e^2_2"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_contract_curve",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The contract curve is the locus of Pareto-efficient allocations in the Edgeworth box: the set of all feasible allocations at which the indifference curves of the two consumers are tangent. It is also the set of points from which no mutually beneficial trade is possible.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_edgeworth_box",
+        "Def_5.1_pareto_efficient"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Standard term referenced in the discussion of the Edgeworth box on pages 214-215.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5.1_feasible_allocations",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The set of feasible allocations is\n  F(e) ≡ { x | Σ_{i∈I} x^i = Σ_{i∈I} e^i }.\nAn allocation x = (x^1, ..., x^I) is feasible if the total consumption of each good equals the total endowment of that good across all consumers.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_exchange_economy",
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.1",
+      "labeled": true,
+      "context": "Equation (5.1) in the text; the market-clearing / materials-balance condition.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations",
+        "x^i": "consumption bundle of consumer i",
+        "e^i": "endowment of consumer i",
+        "I": "set of consumers"
+      }
+    },
+    {
+      "id": "Def_5.1_pareto_efficient",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A feasible allocation x ∈ F(e) is Pareto efficient if there is no other feasible allocation y ∈ F(e) such that y^i ≿^i x^i for all i ∈ I, with at least one preference strict.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_feasible_allocations",
+        "Implicit_Def_5.0_exchange_economy"
+      ],
+      "section": "5.1",
+      "labeled": true,
+      "context": "Definition 5.1 in the text. Equivalently: an allocation is Pareto efficient if it is impossible to make someone strictly better off without making someone else strictly worse off.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations",
+        "≿^i": "preference relation of consumer i (weak preference)",
+        "≻^i": "strict preference of consumer i"
+      }
+    },
+    {
+      "id": "Claim_5.1_a",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Every barter equilibrium must be a feasible and Pareto-efficient allocation. That is, if x ∈ F(e) is a barter equilibrium then x is Pareto efficient.",
+      "proof": "Suppose x ∈ F(e) is not Pareto efficient. Then there exists another feasible allocation y ∈ F(e) such that y^i ≿^i x^i for all i ∈ I with at least one preference strict. The consumer who can be made strictly better off can arrange a trade with the others by announcing: 'I'll give each consumer i the bundle y^i in exchange for the bundle x^i'. Because both x and y are feasible, this trade is feasible. No consumer will object because it makes everyone at least as well off as before, and makes at least one consumer strictly better off. Consequently, x would not be an equilibrium. Hence, any barter equilibrium must be Pareto efficient.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_feasible_allocations",
+        "Def_5.1_pareto_efficient",
+        "Implicit_Def_5.0_barter_equilibrium",
+        "Implicit_Def_5.0_voluntary_exchange"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Inline argument on pages 215-216 establishing the necessary condition for barter equilibrium.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations",
+        "≿^i": "weak preference of consumer i"
+      }
+    },
+    {
+      "id": "Claim_5.1_b",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Every Pareto-efficient allocation is a barter equilibrium. That is, if x ∈ F(e) is Pareto efficient, then no consumer or group of consumers can move away from x through voluntary trade.",
+      "proof": "Suppose x is Pareto efficient. Every other feasible allocation that makes someone better off must make at least one other consumer worse off (by definition of Pareto efficiency). Hence, the consumer who would be made worse off will not agree to any trade that moves away from x. Therefore x is a barter equilibrium.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_pareto_efficient",
+        "Implicit_Def_5.0_barter_equilibrium",
+        "Implicit_Def_5.0_voluntary_exchange"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Inline argument on page 216 establishing the sufficient condition: Pareto efficiency implies barter equilibrium.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations"
+      }
+    },
+    {
+      "id": "Claim_5.1_c",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "The set of barter equilibria coincides with the set of Pareto-efficient feasible allocations: x is a barter equilibrium if and only if x ∈ F(e) and x is Pareto efficient.",
+      "proof": null,
+      "proof_sketch": "Combines Claims 5.1_a and 5.1_b: necessity is Claim_5.1_a; sufficiency is Claim_5.1_b.",
+      "dependencies": [
+        "Claim_5.1_a",
+        "Claim_5.1_b"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Synthesising statement following Claims 5.1_a and 5.1_b on page 216.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5.2_blocking_coalition",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let S ⊂ I denote a coalition of consumers. We say that S blocks x ∈ F(e) if there is an allocation y such that:\n  1. Σ_{i∈S} y^i = Σ_{i∈S} e^i  (feasibility for the coalition alone using its own endowments),\n  2. y^i ≿^i x^i for all i ∈ S, with at least one preference strict.\nAn allocation x ∈ F(e) is blocked if some coalition S ⊂ I blocks it; it is unblocked if no coalition blocks it.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_feasible_allocations",
+        "Implicit_Def_5.0_exchange_economy"
+      ],
+      "section": "5.1",
+      "labeled": true,
+      "context": "Definition 5.2 in the text. A coalition blocks x if it can do better for all its members using only its own endowments.",
+      "notation_in_scope": {
+        "S": "coalition, S ⊂ I",
+        "I": "set of all consumers",
+        "≿^i": "weak preference of consumer i",
+        "y^i": "bundle allocated to consumer i under alternative allocation y"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_grand_coalition",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The grand coalition is the coalition S = I consisting of all consumers. Feasibility for the grand coalition (Σ_{i∈I} y^i = Σ_{i∈I} e^i) is exactly the condition that y ∈ F(e).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_blocking_coalition",
+        "Def_5.1_feasible_allocations"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit in the note following Definition 5.2.",
+      "notation_in_scope": {
+        "S = I": "grand coalition"
+      }
+    },
+    {
+      "id": "Claim_5.1_d",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If x ∈ F(e) is unblocked, then x is Pareto efficient. Equivalently, any non-Pareto-efficient feasible allocation is blocked by the grand coalition S = I.",
+      "proof": "If x is not Pareto efficient, then there exists y ∈ F(e) with y^i ≿^i x^i for all i ∈ I and at least one strict. Since y ∈ F(e), we have Σ_{i∈I} y^i = Σ_{i∈I} e^i, so condition 1 of Definition 5.2 holds for S = I. Condition 2 holds by assumption. Therefore the grand coalition S = I blocks x. Contrapositive: if x is unblocked, x is Pareto efficient.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_blocking_coalition",
+        "Def_5.1_pareto_efficient",
+        "Implicit_Def_5.0_grand_coalition"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated as a note immediately after Definition 5.2: 'in general, if x ∈ F(e) is unblocked, then it must be Pareto efficient, because otherwise it would be blocked by the grand coalition S = I.'",
+      "notation_in_scope": {
+        "S = I": "grand coalition"
+      }
+    },
+    {
+      "id": "Claim_5.1_e",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "An allocation x ∈ F(e) is a barter equilibrium in the exchange economy with endowments e if and only if x is not blocked by any coalition of consumers. That is, barter equilibria are precisely the unblocked feasible allocations.",
+      "proof": null,
+      "proof_sketch": "Barter equilibrium requires that no individual or group can profitably deviate through voluntary trade. A coalition blocking x means exactly that the coalition can do better using its own endowments, which is a feasible unilateral deviation. Hence barter equilibrium is equivalent to being unblocked.",
+      "dependencies": [
+        "Implicit_Def_5.0_barter_equilibrium",
+        "Def_5.2_blocking_coalition",
+        "Def_5.3_core"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated in the paragraph immediately before Definition 5.3: 'an allocation x ∈ F(e) is an equilibrium in the exchange economy with endowments e if x is not blocked by any coalition of consumers.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5.3_core",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The core of an exchange economy with endowment e, denoted C(e), is the set of all unblocked feasible allocations:\n  C(e) = { x ∈ F(e) | no coalition S ⊂ I blocks x }.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_feasible_allocations",
+        "Def_5.2_blocking_coalition"
+      ],
+      "section": "5.1",
+      "labeled": true,
+      "context": "Definition 5.3 in the text.",
+      "notation_in_scope": {
+        "C(e)": "the core of the exchange economy",
+        "F(e)": "set of feasible allocations"
+      }
+    },
+    {
+      "id": "Claim_5.1_f_core_nonempty",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Every exchange economy possesses at least one allocation in the core: C(e) ≠ ∅ under a number of familiar conditions. That is, there exists at least one feasible and unblocked allocation.",
+      "proof": null,
+      "proof_sketch": "Deferred to later in the chapter; established as a corollary of the existence of Walrasian equilibrium (Theorem 5.5) and the core-equilibrium inclusion (Theorem 5.6): under Assumption 5.1 and Σ e^i ≫ 0, every WEA is in the core, and a WEA exists.",
+      "dependencies": [
+        "Def_5.3_core",
+        "Thm_5.5_existence_walrasian",
+        "Thm_5.6_core_equilibria"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated at the end of Section 5.1 as a question to be resolved later: 'As we shall later show, the answer is yes under a number of familiar conditions.'",
+      "notation_in_scope": {
+        "C(e)": "the core"
+      }
+    },
+    {
+      "id": "Assn_5.1_consumer_utility",
+      "type": "axiom",
+      "role": "implicit_assumption",
+      "statement": "Assumption 5.1 (Consumer Utility): For each consumer i ∈ I, the utility function u^i: R^n_+ → R is (i) continuous, (ii) strongly increasing (i.e., x ≫ y implies u^i(x) > u^i(y)), and (iii) strictly quasiconcave on R^n_+.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Assumption 5.1 in the text. These conditions guarantee unique, continuous demand functions (Theorem 5.1) and that Walras' law holds with equality.",
+      "notation_in_scope": {
+        "u^i": "utility function of consumer i",
+        "R^n_+": "non-negative orthant of R^n",
+        "strongly increasing": "x ≫ y implies u^i(x) > u^i(y)",
+        "strictly quasiconcave": "upper contour sets are strictly convex"
+      }
+    },
+    {
+      "id": "Def_5.2_consumer_problem",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Consumer i's problem in a competitive market system at prices p ∈ R^n_{++} is:\n  max_{x^i ∈ R^n_+} u^i(x^i)  subject to  p · x^i ≤ p · e^i.  (5.2)\nThe income of consumer i is p · e^i (the market value of the endowment at prices p). The solution x^i(p, p · e^i) is the Walrasian demand of consumer i.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Assn_5.1_consumer_utility",
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Equation (5.2) in the text. Income is endowment-income p · e^i rather than an exogenous parameter.",
+      "notation_in_scope": {
+        "p": "price vector in R^n_{++}",
+        "x^i(p, p·e^i)": "Walrasian demand of consumer i",
+        "p · e^i": "endowment income of consumer i",
+        "R^n_+": "consumption set"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_walrasian_demand",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The Walrasian demand function of consumer i is x^i(p, m^i): R^n_{++} × R_+ → R^n_+, where m^i = p · e^i is endowment income, defined as the solution to consumer i's problem (5.2). Under Assumption 5.1 and p ≫ 0, this is a well-defined function (unique solution).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_consumer_problem",
+        "Assn_5.1_consumer_utility"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit from Theorem 5.1; the notation x^i(p, p·e^i) is used throughout.",
+      "notation_in_scope": {
+        "x^i(p, m^i)": "demand function of consumer i",
+        "m^i = p · e^i": "endowment income"
+      }
+    },
+    {
+      "id": "Thm_5.1_basic_demand_properties",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "If u^i satisfies Assumption 5.1, then for each p ≫ 0, the consumer's problem (5.2) has a unique solution x^i(p, p · e^i). In addition, x^i(p, p · e^i) is continuous in p on R^n_{++}.",
+      "proof": "Existence of a solution: p ≫ 0 implies the budget set {x^i ∈ R^n_+ | p · x^i ≤ p · e^i} is compact (closed and bounded), and u^i is continuous, so by the extreme value theorem a maximum exists. Uniqueness: follows from strict quasiconcavity of u^i (the upper contour sets are strictly convex, so the budget hyperplane can be tangent at most one point in the interior; combined with monotonicity, the solution is unique). Continuity: follows from the Theorem of the Maximum (Theorem A2.21 of the text), which requires p ≫ 0 to ensure the budget correspondence is continuous.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Assn_5.1_consumer_utility",
+        "Def_5.2_consumer_problem",
+        "Invoked_ThmMaximum",
+        "Invoked_ExtremeValueThm"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Theorem 5.1 in the text.",
+      "notation_in_scope": {
+        "x^i(p, p·e^i)": "demand function",
+        "R^n_{++}": "strictly positive price vectors"
+      }
+    },
+    {
+      "id": "Implicit_Claim_5.1_budget_binding",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "When u^i is strongly increasing, the budget constraint in consumer i's problem (5.2) holds with equality at the optimum: p · x^i(p, p · e^i) = p · e^i.",
+      "proof": "If the budget constraint were slack (p · x^i < p · e^i), the consumer could increase every component of x^i slightly and remain feasible, strictly increasing utility by strong monotonicity, contradicting optimality.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Assn_5.1_consumer_utility",
+        "Def_5.2_consumer_problem"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit in the proof of Walras' law in Theorem 5.2: 'Walras' law follows because when u^i is strongly increasing, each consumer's budget constraint holds with equality.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5.4_excess_demand",
+      "type": "definition",
+      "role": "definition",
+      "statement": "The aggregate excess demand function for good k is:\n  z_k(p) ≡ Σ_{i∈I} x^i_k(p, p · e^i) − Σ_{i∈I} e^i_k.\nThe aggregate excess demand function is the vector:\n  z(p) ≡ (z_1(p), ..., z_n(p)).\nThus z(p) measures, for each good, the total amount demanded in excess of the total endowment at prices p.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.1_basic_demand_properties",
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Definition 5.4 in the text.",
+      "notation_in_scope": {
+        "z_k(p)": "aggregate excess demand for good k",
+        "z(p)": "aggregate excess demand vector",
+        "x^i_k(p, p·e^i)": "demand of consumer i for good k"
+      }
+    },
+    {
+      "id": "Thm_5.2_excess_demand_properties",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "If for each consumer i, u^i satisfies Assumption 5.1, then for all p ≫ 0:\n  1. Continuity: z(·) is continuous at p.\n  2. Homogeneity: z(λp) = z(p) for all λ > 0.\n  3. Walras' law: p · z(p) = 0.",
+      "proof": "Continuity: z(p) is a sum of continuous functions x^i(p, p·e^i) (continuous by Theorem 5.1) minus the constant Σ e^i_k; hence z(p) is continuous.\n\nHomogeneity: The budget constraint in (5.2) at prices λp is λp · x^i ≤ λp · e^i, which simplifies to p · x^i ≤ p · e^i, the same constraint as at prices p. Hence the feasible set is unchanged, the objective is unchanged, and the optimum x^i(λp, λp·e^i) = x^i(p, p·e^i) for all λ > 0. It follows that z_k(λp) = z_k(p) for all k.\n\nWalras' law: Because u^i is strongly increasing, the budget constraint holds with equality: p · x^i(p, p·e^i) = p·e^i, equivalently Σ_{k=1}^n p_k(x^i_k(p, p·e^i) − e^i_k) = 0. Summing over all i ∈ I:\n  Σ_{i∈I} Σ_{k=1}^n p_k(x^i_k(p, p·e^i) − e^i_k) = 0.\nReversing the order of summation:\n  Σ_{k=1}^n Σ_{i∈I} p_k(x^i_k(p, p·e^i) − e^i_k) = 0.\nEquivalently:\n  Σ_{k=1}^n p_k(Σ_{i∈I} x^i_k(p, p·e^i) − Σ_{i∈I} e^i_k) = 0.\nBy Definition 5.4, the term in parentheses is z_k(p), so:\n  Σ_{k=1}^n p_k z_k(p) = 0, i.e., p · z(p) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Assn_5.1_consumer_utility",
+        "Def_5.4_excess_demand",
+        "Thm_5.1_basic_demand_properties",
+        "Implicit_Claim_5.1_budget_binding"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Theorem 5.2 in the text.",
+      "notation_in_scope": {
+        "z(p)": "aggregate excess demand",
+        "p · z(p)": "inner product",
+        "λ > 0": "positive scalar"
+      }
+    },
+    {
+      "id": "Claim_5.2_walras_two_good_a",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In a two-good economy (n = 2) with strictly positive prices (p ≫ 0), Walras' law implies: p_1 z_1(p) = −p_2 z_2(p).",
+      "proof": "Walras' law states p · z(p) = 0. For n = 2: p_1 z_1(p) + p_2 z_2(p) = 0, so p_1 z_1(p) = −p_2 z_2(p).",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.2_excess_demand_properties"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Inline implication of Walras' law stated in the text for the two-good case.",
+      "notation_in_scope": {
+        "n = 2": "two-good economy",
+        "p_1, p_2": "prices of goods 1 and 2",
+        "z_1(p), z_2(p)": "excess demands"
+      }
+    },
+    {
+      "id": "Claim_5.2_walras_two_good_b",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In a two-good economy with p ≫ 0: if z_1(p) > 0 then z_2(p) < 0.",
+      "proof": "From p_1 z_1(p) = −p_2 z_2(p) (Claim_5.2_walras_two_good_a), and p_1 > 0, p_2 > 0: if z_1(p) > 0 then p_1 z_1(p) > 0, so −p_2 z_2(p) > 0, so z_2(p) < 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Claim_5.2_walras_two_good_a"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Inline implication of Walras' law.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5.2_walras_two_good_c",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In a two-good economy with p ≫ 0: if z_1(p) = 0 then z_2(p) = 0.",
+      "proof": "From p_1 z_1(p) = −p_2 z_2(p): if z_1(p) = 0 then 0 = −p_2 z_2(p); since p_2 > 0, z_2(p) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Claim_5.2_walras_two_good_a"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Inline implication of Walras' law.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5.2_walras_n_minus_1",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If n − 1 markets are in equilibrium (z_k(p) = 0 for k = 1, ..., n−1), then the nth market is also in equilibrium (z_n(p) = 0), provided p_n > 0.",
+      "proof": "By Walras' law, Σ_{k=1}^n p_k z_k(p) = 0. If z_k(p) = 0 for k = 1, ..., n−1, then Σ_{k=1}^{n-1} p_k · 0 + p_n z_n(p) = 0, so p_n z_n(p) = 0. Since p_n > 0, z_n(p) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.2_excess_demand_properties"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Standard implication of Walras' law stated inline in the text.",
+      "notation_in_scope": {
+        "n": "number of goods"
+      }
+    },
+    {
+      "id": "Def_5.5_walrasian_equilibrium",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A vector p* ∈ R^n_{++} is called a Walrasian equilibrium if z(p*) = 0, i.e., if aggregate excess demand is zero for every good simultaneously.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.4_excess_demand"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Definition 5.5 in the text.",
+      "notation_in_scope": {
+        "p*": "Walrasian equilibrium price vector",
+        "z(p*)": "aggregate excess demand at p*",
+        "R^n_{++}": "strictly positive price vectors"
+      }
+    },
+    {
+      "id": "Implicit_Claim_5.2_equilibrium_requires_positive_prices",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "The Walrasian equilibrium requires p* ≫ 0 (all prices strictly positive); p* = 0 is excluded by the definition.",
+      "proof": null,
+      "proof_sketch": "If any price were zero, strongly increasing utility implies demand for that good would be unbounded (or at least not well-defined in the usual sense), so z_k(p) would not be finite. Moreover, the consumer's problem (5.2) requires p ≫ 0 for the budget set to be bounded.",
+      "dependencies": [
+        "Def_5.5_walrasian_equilibrium",
+        "Assn_5.1_consumer_utility"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit in the requirement p* ∈ R^n_{++} in Definition 5.5 and in Theorem 5.3's conclusion that p* ≫ 0.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Thm_5.3_existence_fixed_point",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "Suppose z: R^n_{++} → R^n satisfies:\n  1. z(·) is continuous on R^n_{++};\n  2. p · z(p) = 0 for all p ≫ 0  (Walras' law);\n  3. If {p^m} is a sequence of price vectors in R^n_{++} converging to p̄ ≠ 0, and p̄_k = 0 for some good k, then for some good k' with p̄_{k'} = 0, the associated sequence {z_{k'}(p^m)} is unbounded above.\nThen there exists a price vector p* ≫ 0 such that z(p*) = 0.",
+      "proof": "For each good k, let z̄_k(p) = min(z_k(p), 1) for all p ≫ 0, and z̄(p) = (z̄_1(p), ..., z̄_n(p)).\n\nFix ε ∈ (0,1), and let S_ε = {p | Σ_{k=1}^n p_k = 1, p_k ≥ ε/(1+2n) for all k}. S_ε is compact (closed and bounded), convex, and non-empty (the vector with each component 1/n satisfies Σ p_k = 1 and each p_k = 1/n ≥ ε/(1+2n) for small enough ε; more precisely, the vector with components (2 + 1/n)/(1+2n) is always a member because ε < 1 implies this exceeds ε/(1+2n)).\n\nFor each good k and p ∈ S_ε, define:\n  f_k(p) = [ε + p_k + max(0, z̄_k(p))] / [nε + 1 + Σ_{m=1}^n max(0, z̄_m(p))].\n\nLet f(p) = (f_1(p), ..., f_n(p)). Then:\n  Σ_{k=1}^n f_k(p) = [nε + Σ_k p_k + Σ_k max(0, z̄_k(p))] / [nε + 1 + Σ_m max(0, z̄_m(p))] = 1\n  (using Σ_k p_k = 1). Also f_k(p) ≥ ε/(nε + 1 + n) ≥ ε/(1+2n) (since ε < 1 and the denominator ≤ nε + 1 + n ≤ 1 + 2n). Therefore f: S_ε → S_ε.\n\nEach f_k is continuous on S_ε because z_k(·) is continuous on R^n_{++} ⊃ S_ε, hence z̄_k(·) is continuous, and max(0, ·) preserves continuity. By Brouwer's fixed-point theorem (Theorem A1.11), there exists p^ε ∈ S_ε with f(p^ε) = p^ε, i.e., f_k(p^ε) = p^ε_k for every k. Rearranging:\n\n  p^ε_k (nε + Σ_{m=1}^n max(0, z̄_m(p^ε))) = ε + max(0, z̄_k(p^ε)).   (P.1)\n\nNow allow ε → 0. The sequence {p^ε} lies in the simplex {p | Σ p_k = 1, p_k ≥ 0}, which is compact. By Bolzano-Weierstrass (Theorem A1.8), some subsequence converges; call the limit p*. Then p* ≥ 0 and p* ≠ 0 (components sum to 1).\n\nClaim: p* ≫ 0. Suppose for contradiction that p*_{k̄} = 0 for some k̄. By condition 3, there exists k' with p*_{k'} = 0 such that z_{k'}(p^ε) is unbounded above along the subsequence. Since p^ε_{k'} → 0, the left side of (P.1) for k = k' tends to 0. On the right side, z_{k'}(p^ε) being unbounded above means z̄_{k'}(p^ε) = min(z_{k'}(p^ε), 1) = 1 for infinitely many terms, so the right side equals ε + 1 → 1 ≠ 0. Contradiction. Hence p* ≫ 0.\n\nTaking the limit in (P.1) as ε → 0 (passing to convergent subsequence):\n  p*_k · Σ_{m=1}^n max(0, z̄_m(p*)) = max(0, z̄_k(p*)).   (P.2)\n\nMultiplying both sides by z_k(p*) and summing over k:\n  [Σ_k p*_k z_k(p*)] · [Σ_m max(0, z̄_m(p*))] = Σ_k z_k(p*) max(0, z̄_k(p*)).\n\nBy Walras' law (condition 2), the left side equals 0 · [Σ max(0, z̄_m(p*))] = 0. The right side is Σ_k z_k(p*) max(0, z̄_k(p*)). Since sign(z̄_k(p*)) = sign(z_k(p*)), each term z_k(p*) max(0, z̄_k(p*)) ≥ 0. For the sum to equal 0, each term must be 0. This requires z_k(p*) ≤ 0 for all k. Combined with p* ≫ 0 and Walras' law (p* · z(p*) = 0), having z_k(p*) ≤ 0 for all k with p* > 0 implies z_k(p*) = 0 for all k. Hence z(p*) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Invoked_Brouwer",
+        "Invoked_BolzanoWeierstrass",
+        "Thm_5.2_excess_demand_properties"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Theorem 5.3 in the text. This is the abstract fixed-point existence theorem; Theorem 5.4 verifies its hypotheses under Assumption 5.1.",
+      "notation_in_scope": {
+        "z(p)": "aggregate excess demand function",
+        "S_ε": "truncated price simplex",
+        "f": "fixed-point map",
+        "z̄_k(p)": "min(z_k(p), 1)",
+        "p^ε": "fixed point of f on S_ε"
+      }
+    },
+    {
+      "id": "Thm_5.4_utility_implies_conditions",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "If each consumer's utility function satisfies Assumption 5.1, and if Σ_{i=1}^I e^i ≫ 0 (aggregate endowment is strictly positive in every good), then aggregate excess demand z(p) satisfies conditions 1, 2, and 3 of Theorem 5.3.",
+      "proof": "Conditions 1 and 2 follow directly from Theorem 5.2 (continuity and homogeneity of z).\n\nCondition 3: Let {p^m} be a sequence in R^n_{++} converging to p̄ ≠ 0 with p̄_k = 0 for some k. We must show some z_{k'}(p^m) is unbounded above for some k' with p̄_{k'} = 0.\n\nSince Σ_{i=1}^I e^i ≫ 0, we have p̄ · Σ e^i > 0, so there exists at least one consumer i whose limiting income p̄ · e^i > 0.\n\nConsider this consumer i's demand sequence {x^i(p^m, p^m · e^i)}. Suppose by contradiction that this sequence is bounded. Then it has a convergent subsequence converging to some x*. Since u^i is strongly increasing, the budget constraint holds with equality: p^m · x^i(p^m, p^m · e^i) = p^m · e^i for all m. Taking limits: p̄ · x* = p̄ · e^i > 0. (P.1)\n\nLet x̂ = x* + δ_k where δ_k is the unit vector in direction k. Then u^i(x̂) > u^i(x*) by strong monotonicity. (P.2) Also p̄ · x̂ = p̄ · x* + p̄_k = p̄ · x* + 0 = p̄ · e^i > 0 (since p̄_k = 0). (P.3)\n\nBy continuity of u^i, (P.2) and (P.3) imply there exists t ∈ (0,1) such that u^i(tx̂) > u^i(x*) and p̄ · (tx̂) < p̄ · e^i. For large enough m: u^i(tx̂) > u^i(x^i(p^m, p^m · e^i)) and p^m · (tx̂) < p^m · e^i, contradicting optimality of x^i(p^m, p^m · e^i). Therefore the demand sequence is unbounded.\n\nSince {x^i(p^m, p^m · e^i)} is unbounded and non-negative, some component x^i_{k'}(p^m, p^m · e^i) is unbounded above. The income p^m · e^i → p̄ · e^i (bounded). For x^i_{k'}(p^m, p^m · e^i) to be unbounded while income is bounded, we need p^m_{k'} → 0, hence p̄_{k'} = 0. Since supply Σ e^i_{k'} is fixed, unbounded demand for k' implies z_{k'}(p^m) = Σ_i x^i_{k'}(p^m, p^m · e^i) − Σ_i e^i_{k'} is unbounded above.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Assn_5.1_consumer_utility",
+        "Def_5.4_excess_demand",
+        "Thm_5.2_excess_demand_properties",
+        "Thm_5.3_existence_fixed_point",
+        "Implicit_Claim_5.1_budget_binding"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Theorem 5.4 in the text. The key condition is Σ e^i ≫ 0 (every good is present in the aggregate).",
+      "notation_in_scope": {
+        "Σ e^i ≫ 0": "aggregate endowment strictly positive in all goods",
+        "p̄": "limit of price sequence, possibly on boundary of simplex"
+      }
+    },
+    {
+      "id": "Thm_5.5_existence_walrasian",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "If each consumer's utility function satisfies Assumption 5.1, and Σ_{i=1}^I e^i ≫ 0, then there exists at least one price vector p* ≫ 0 such that z(p*) = 0. That is, a Walrasian equilibrium exists.",
+      "proof": "By Theorem 5.4, Assumption 5.1 and Σ e^i ≫ 0 imply that z satisfies conditions 1, 2, and 3 of Theorem 5.3. By Theorem 5.3, there exists p* ≫ 0 with z(p*) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.3_existence_fixed_point",
+        "Thm_5.4_utility_implies_conditions",
+        "Assn_5.1_consumer_utility"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Theorem 5.5 in the text. The main existence theorem for Walrasian equilibrium.",
+      "notation_in_scope": {
+        "p*": "Walrasian equilibrium price vector"
+      }
+    },
+    {
+      "id": "Claim_5.2_homogeneity_relative_prices",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Homogeneity of degree zero of z(p) means that only relative prices matter. Specifically, if p* is a Walrasian equilibrium, then so is λp* for any λ > 0: z(λp*) = z(p*) = 0.",
+      "proof": "z(λp*) = z(p*) by homogeneity (Theorem 5.2, property 2). Since z(p*) = 0, z(λp*) = 0.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.2_excess_demand_properties",
+        "Def_5.5_walrasian_equilibrium"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Inline claim following Theorem 5.5 in the text: 'If p* is a Walrasian equilibrium and utilities satisfy Assumption 5.1, then z(p*) = z(λp*) = 0 for all λ > 0.'",
+      "notation_in_scope": {
+        "λ > 0": "positive scalar",
+        "λp*": "rescaled price vector"
+      }
+    },
+    {
+      "id": "Example_5.1_CES_equilibrium",
+      "type": "example",
+      "role": "claimed_result",
+      "statement": "Consider a two-consumer, two-good exchange economy with CES utility u^i(x_1, x_2) = x_1^ρ + x_2^ρ for ρ ∈ (0,1) for both consumers, endowments e^1 = (1, 0) and e^2 = (0, 1). Then a Walrasian equilibrium exists and is characterised by the relative price p*_1 / p*_2 = 1.",
+      "proof": null,
+      "proof_sketch": "By symmetry of the problem (endowments are symmetric, utilities are identical and symmetric in the two goods), equilibrium requires p*_1 = p*_2. One can verify directly: at equal prices, each consumer's CES demand is x_1 = x_2 = 1/2, aggregate demand equals aggregate supply (1, 1) = e^1 + e^2. Hence z(p*) = 0.",
+      "dependencies": [
+        "Thm_5.5_existence_walrasian",
+        "Assn_5.1_consumer_utility",
+        "Def_5.4_excess_demand"
+      ],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Example 5.1 in the text.",
+      "notation_in_scope": {
+        "ρ": "CES parameter, ρ ∈ (0,1)",
+        "u^i(x_1, x_2) = x_1^ρ + x_2^ρ": "CES utility",
+        "p*_1/p*_2": "relative price at equilibrium"
+      }
+    },
+    {
+      "id": "Def_5.6_WEA",
+      "type": "definition",
+      "role": "definition",
+      "statement": "Let p* be a Walrasian equilibrium for some economy with initial endowments e. The Walrasian equilibrium allocation (WEA) associated with p* is:\n  x(p*) ≡ (x^1(p*, p* · e^1), ..., x^I(p*, p* · e^I)),\nwhere component i gives the n-vector of goods demanded and received by consumer i at prices p*.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.5_walrasian_equilibrium",
+        "Implicit_Def_5.0_walrasian_demand"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Definition 5.6 in the text.",
+      "notation_in_scope": {
+        "x(p*)": "WEA, a profile of consumption bundles",
+        "x^i(p*, p*·e^i)": "demand of consumer i at Walrasian equilibrium prices",
+        "WEA": "Walrasian equilibrium allocation"
+      }
+    },
+    {
+      "id": "Lemma_5.1_WEA_feasible",
+      "type": "lemma",
+      "role": "claimed_result",
+      "statement": "Let p* be a Walrasian equilibrium for some economy with initial endowments e. Let x(p*) be the associated WEA. Then x(p*) ∈ F(e), i.e., the WEA is feasible.",
+      "proof": "Since p* is a Walrasian equilibrium, z(p*) = 0, meaning:\n  Σ_{i∈I} x^i(p*, p*·e^i) − Σ_{i∈I} e^i = 0,\nhence Σ_{i∈I} x^i(p*, p*·e^i) = Σ_{i∈I} e^i.\nBy Definition 5.1 (feasibility), x(p*) ∈ F(e).",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.6_WEA",
+        "Def_5.5_walrasian_equilibrium",
+        "Def_5.4_excess_demand",
+        "Def_5.1_feasible_allocations"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Lemma 5.1 in the text.",
+      "notation_in_scope": {
+        "F(e)": "set of feasible allocations"
+      }
+    },
+    {
+      "id": "Lemma_5.2_preference_cost_inequality",
+      "type": "lemma",
+      "role": "claimed_result",
+      "statement": "Suppose u^i is strictly increasing on R^n_+, consumer i's demand at prices p ≥ 0 is well-defined and equal to x̂^i, and x^i ∈ R^n_+.\n  (i) If u^i(x^i) > u^i(x̂^i), then p · x^i > p · x̂^i.\n  (ii) If u^i(x^i) ≥ u^i(x̂^i), then p · x^i ≥ p · x̂^i.",
+      "proof": "(i) Left as exercise. [Standard argument: if u^i(x^i) > u^i(x̂^i) but p · x^i ≤ p · x̂^i, then x^i is in the budget set, and x̂^i was preferred — but x̂^i = x^i(p, p·e^i) is optimal, so no bundle in the budget set should be preferred. More precisely: if x^i is affordable (p · x^i ≤ p · x̂^i ≤ budget) and gives strictly higher utility, this contradicts x̂^i being the demand.]\n\n(ii) Suppose by contradiction u^i(x^i) ≥ u^i(x̂^i) but p · x^i < p · x̂^i. Starting from x^i, increase every component by a small amount δ > 0 to get x̄^i = x^i + (δ,...,δ). For small enough δ, p · x̄^i = p · x^i + p · (δ,...,δ) < p · x̂^i (since p · x^i is strictly less than p · x̂^i, for small δ this remains true). By strong monotonicity, u^i(x̄^i) > u^i(x^i) ≥ u^i(x̂^i). Thus x̄^i strictly dominates x̂^i in utility and is strictly cheaper than x̂^i, contradicting part (i).",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.6_WEA",
+        "Assn_5.1_consumer_utility"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Lemma 5.2 in the text. This is the key revealed preference lemma used in the proof of Theorem 5.6.",
+      "notation_in_scope": {
+        "x̂^i": "demand of consumer i (optimal bundle at given prices)",
+        "p · x^i": "expenditure on bundle x^i at prices p",
+        "strictly increasing": "stronger than strongly increasing; here meaning x ≥ y, x ≠ y ⟹ u^i(x) > u^i(y)"
+      }
+    },
+    {
+      "id": "Implicit_Assumption_strictly_increasing",
+      "type": "implicit_assumption",
+      "role": "implicit_assumption",
+      "statement": "In Lemma 5.2 and Theorem 5.6, 'strictly increasing' means: for all x^i, y^i ∈ R^n_+ with x^i ≥ y^i (componentwise) and x^i ≠ y^i, u^i(x^i) > u^i(y^i). This is a weaker condition than 'strongly increasing' (which requires x^i ≫ y^i ⟹ u^i(x^i) > u^i(y^i)).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.2",
+      "labeled": false,
+      "context": "Implicit distinction between 'strongly increasing' (Assumption 5.1) and 'strictly increasing' (used in Lemma 5.2 and Theorems 5.6, 5.7). The welfare theorems hold under the weaker condition.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5.2_WEA_not_unique",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Walrasian equilibrium allocations (WEAs) need not be unique. Different equilibrium price vectors p* may support different allocations x(p*).",
+      "proof": null,
+      "proof_sketch": "Even in simple economies, multiple equilibrium price vectors can exist (non-uniqueness of equilibrium prices), and at the same price vector different tie-breaking rules for demand can yield different allocations (though uniqueness of demand under strict quasiconcavity rules this out for a fixed price vector). More substantially, different equilibrium price vectors can yield genuinely different allocation profiles.",
+      "dependencies": [
+        "Def_5.6_WEA",
+        "Def_5.7_set_WEA"
+      ],
+      "section": "5.2.2",
+      "labeled": false,
+      "context": "Stated as an inline remark in the text: 'WEAs need not be unique.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Def_5.7_set_WEA",
+      "type": "definition",
+      "role": "definition",
+      "statement": "For any economy with endowments e, let W(e) denote the set of all Walrasian equilibrium allocations:\n  W(e) = { x(p*) | p* is a Walrasian equilibrium for economy (u^i, e^i)_{i∈I} }.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.6_WEA",
+        "Def_5.5_walrasian_equilibrium"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Definition 5.7 in the text.",
+      "notation_in_scope": {
+        "W(e)": "set of all Walrasian equilibrium allocations"
+      }
+    },
+    {
+      "id": "Thm_5.6_core_equilibria",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "Consider an exchange economy (u^i, e^i)_{i∈I}. If each consumer's utility function u^i is strictly increasing on R^n_+, then every Walrasian equilibrium allocation is in the core:\n  W(e) ⊂ C(e).",
+      "proof": "Suppose x(p*) is a WEA and suppose for contradiction x(p*) ∉ C(e). By Lemma 5.1, x(p*) ∈ F(e). Since x(p*) ∉ C(e), there exists a coalition S ⊂ I and an allocation y such that:\n  (P.1) Σ_{i∈S} y^i = Σ_{i∈S} e^i,\n  (P.2) u^i(y^i) ≥ u^i(x^i(p*, p*·e^i)) for all i ∈ S, with at least one strict.\n\nFrom (P.1): p* · Σ_{i∈S} y^i = p* · Σ_{i∈S} e^i.  (P.3)\n\nBy Lemma 5.2: (P.2) with at least one strict implies:\n  p* · y^i ≥ p* · e^i for all i ∈ S,\n  p* · y^i > p* · e^i for at least one i ∈ S.\n\nSumming over S:\n  p* · Σ_{i∈S} y^i > p* · Σ_{i∈S} e^i,\ncontradicting (P.3). Therefore x(p*) ∈ C(e).",
+      "proof_sketch": null,
+      "dependencies": [
+        "Lemma_5.1_WEA_feasible",
+        "Lemma_5.2_preference_cost_inequality",
+        "Def_5.3_core",
+        "Def_5.7_set_WEA"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Theorem 5.6 in the text.",
+      "notation_in_scope": {
+        "W(e)": "set of WEAs",
+        "C(e)": "the core"
+      }
+    },
+    {
+      "id": "Cor_5.6_core_nonempty",
+      "type": "corollary",
+      "role": "claimed_result",
+      "statement": "Under the conditions of Theorem 5.5 (Assumption 5.1 and Σ_{i=1}^I e^i ≫ 0), a Walrasian equilibrium allocation exists and, by Theorem 5.6, is in the core. Therefore the core C(e) is non-empty.",
+      "proof": "By Theorem 5.5, there exists p* ≫ 0 with z(p*) = 0, so a WEA x(p*) exists. By Theorem 5.6 (since Assumption 5.1 implies strictly increasing utility), x(p*) ∈ C(e). Hence C(e) ≠ ∅.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.5_existence_walrasian",
+        "Thm_5.6_core_equilibria",
+        "Assn_5.1_consumer_utility"
+      ],
+      "section": "5.2.2",
+      "labeled": false,
+      "context": "Inline corollary stated in the text: 'Under conditions of Theorem 5.5, a WEA exists and by Theorem 5.6 is in the core, so the core is non-empty.' This also resolves the deferred claim from Section 5.1 (Claim_5.1_f_core_nonempty).",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Claim_5.2_core_pareto_efficient",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "All core allocations are Pareto efficient: C(e) ⊂ { x ∈ F(e) | x is Pareto efficient }.",
+      "proof": "If x ∈ C(e) but x is not Pareto efficient, then there exists y ∈ F(e) with y^i ≿^i x^i for all i ∈ I, at least one strict. The grand coalition S = I blocks x using y (Claim_5.1_d), contradicting x ∈ C(e). Hence every core allocation is Pareto efficient.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.3_core",
+        "Def_5.1_pareto_efficient",
+        "Claim_5.1_d"
+      ],
+      "section": "5.2.2",
+      "labeled": false,
+      "context": "Stated as an inline claim in the text before Theorem 5.7: 'All core allocations are Pareto efficient.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Thm_5.7_first_welfare",
+      "type": "theorem",
+      "role": "claimed_result",
+      "statement": "First Welfare Theorem: Under the hypotheses of Theorem 5.6 (each u^i strictly increasing), every Walrasian equilibrium allocation is Pareto efficient:\n  W(e) ⊂ { x ∈ F(e) | x is Pareto efficient }.",
+      "proof": "By Theorem 5.6, W(e) ⊂ C(e). By Claim_5.2_core_pareto_efficient, all core allocations are Pareto efficient. Hence every WEA is Pareto efficient.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.6_core_equilibria",
+        "Claim_5.2_core_pareto_efficient",
+        "Def_5.7_set_WEA",
+        "Def_5.1_pareto_efficient"
+      ],
+      "section": "5.2.2",
+      "labeled": true,
+      "context": "Theorem 5.7 in the text. The First Welfare Theorem: competitive equilibrium allocations are Pareto optimal regardless of initial endowments.",
+      "notation_in_scope": {
+        "W(e)": "set of WEAs",
+        "C(e)": "the core"
+      }
+    },
+    {
+      "id": "Claim_5.2_FWT_endowment_independence",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If p* is a Walrasian equilibrium, then regardless of the initial allocation of endowments (subject to the conditions of Theorem 5.5), the resulting WEA is Pareto efficient.",
+      "proof": null,
+      "proof_sketch": "Immediate from the First Welfare Theorem (Theorem 5.7): the result holds for any economy satisfying the conditions, with any endowment profile summing to a strictly positive aggregate.",
+      "dependencies": [
+        "Thm_5.7_first_welfare"
+      ],
+      "section": "5.2.2",
+      "labeled": false,
+      "context": "Inline claim following Theorem 5.7: 'If p* is Walrasian equilibrium, regardless of initial allocation, the WEA is Pareto efficient.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Def_5.0_invisible_hand",
+      "type": "remark",
+      "role": "definition",
+      "statement": "Adam Smith's Invisible Hand metaphor: in a competitive market system, self-interested agents buying and selling on impersonal markets — with no regard for anything but personal gain — are guided by an invisible force to an equilibrium possessing certain socially desirable characteristics. The First Welfare Theorem (Theorem 5.7) provides a formal statement and proof of this claim: competitive equilibria are Pareto efficient.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.7_first_welfare"
+      ],
+      "section": "5.0",
+      "labeled": false,
+      "context": "Motivating discussion in the chapter introduction (page 212). The chapter's formal results (especially Theorem 5.7) formalise Smith's Invisible Hand.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Def_5.0_existence_uniqueness_stability",
+      "type": "remark",
+      "role": "definition",
+      "statement": "The fundamental questions about competitive market systems are: (1) Existence: is there a set of prices at which supply equals demand in every market simultaneously? (2) Uniqueness: is there one such equilibrium or many? (3) Stability: is the equilibrium robust to perturbations? This chapter addresses only existence (Theorem 5.5).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.0",
+      "labeled": false,
+      "context": "Chapter introduction, page 212.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Invoked_Brouwer",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Brouwer's Fixed-Point Theorem (Theorem A1.11): Let f: C → C be a continuous function from a non-empty, compact, convex subset C of R^n to itself. Then f has a fixed point: there exists x ∈ C such that f(x) = x.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Invoked in the proof of Theorem 5.3 as 'Theorem A1.11'.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Invoked_BolzanoWeierstrass",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Bolzano-Weierstrass Theorem (Theorem A1.8): Every bounded sequence in R^n has a convergent subsequence.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Invoked in the proof of Theorem 5.3: 'The sequence {p^ε} is bounded... so by Theorem A1.8, some subsequence converges.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Invoked_ThmMaximum",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Theorem of the Maximum (Theorem A2.21): If the objective function is continuous and the constraint correspondence is continuous and compact-valued, then the value function is continuous and the solution correspondence is upper hemicontinuous. In particular, when the solution is unique, it is a continuous function of the parameters.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.1",
+      "labeled": true,
+      "context": "Invoked in the proof of Theorem 5.1: 'Continuity at p follows from Theorem A2.21 (the theorem of the maximum), and this requires p ≫ 0.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Invoked_ExtremeValueThm",
+      "type": "invoked_dependency",
+      "role": "invoked_dependency",
+      "statement": "Extreme Value Theorem: A continuous function on a compact (closed and bounded) set attains its maximum and minimum. Used to establish existence of a solution to consumer's problem (5.2) when p ≫ 0 (budget set is compact).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit in the proof of Theorem 5.1: 'existence of a solution follows because p ≫ 0 implies that the budget set is bounded.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Assumption_5.0_private_ownership",
+      "type": "implicit_assumption",
+      "role": "implicit_assumption",
+      "statement": "Private ownership is admitted: each consumer owns their endowment e^i and has exclusive rights over it. This means consumers can choose to consume their endowment or trade it voluntarily, but cannot be coerced.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated on page 213: 'We admit the institution of private ownership into this society and assume that the principle of voluntary, non-coercive trade is respected.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Assumption_5.0_no_production",
+      "type": "implicit_assumption",
+      "role": "implicit_assumption",
+      "statement": "There is no production in the exchange economy. The total supply of each good is fixed and equal to the aggregate endowment Σ_{i∈I} e^i. Commodities exist prior to economic activity; their origin is not modelled.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated on page 213: 'First, there is no production. Commodities exist, but for now we do not ask how they came to be.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Assumption_5.0_self_interest",
+      "type": "implicit_assumption",
+      "role": "implicit_assumption",
+      "statement": "Each consumer cares only about their own individual well-being: consumer i's utility u^i depends only on their own consumption bundle x^i, not on the consumption of others. Preferences are purely self-interested (no externalities in consumption).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Stated on page 213: 'each cares only about his or her individual well-being.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Claim_5.0_distribution_problem",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Market prices determine to a large extent 'who gets what' in a market economy: prices are the principal determinants of what individuals can consume, and hence of the well-being they can achieve.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_consumer_problem"
+      ],
+      "section": "5.0",
+      "labeled": false,
+      "context": "Stated in the chapter introduction: 'The market prices of everything we buy and sell are principal determinants of what we can consume, and so, of the well-being we can achieve. Thus, market prices determine to a large extent who gets what in a market economy.'",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Def_5.0_allocation",
+      "type": "definition",
+      "role": "definition",
+      "statement": "An allocation is a profile x = (x^1, ..., x^I) where x^i ∈ R^n_+ is the consumption bundle of consumer i. An allocation is feasible if x ∈ F(e). An allocation assigns a bundle to each consumer; it need not be feasible a priori.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Implicit_Def_5.0_exchange_economy"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit throughout; the concept of allocation underlies all definitions in Section 5.1.",
+      "notation_in_scope": {
+        "x = (x^1,...,x^I)": "allocation profile",
+        "x^i ∈ R^n_+": "consumption bundle of consumer i"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_coalition_feasibility",
+      "type": "definition",
+      "role": "definition",
+      "statement": "An allocation y is feasible for coalition S if Σ_{i∈S} y^i = Σ_{i∈S} e^i: the coalition can achieve y using only its own endowments, without relying on trade with agents outside S.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_blocking_coalition",
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit in condition 1 of Definition 5.2.",
+      "notation_in_scope": {
+        "S": "coalition",
+        "Σ_{i∈S} y^i = Σ_{i∈S} e^i": "coalition feasibility"
+      }
+    },
+    {
+      "id": "Implicit_Claim_5.1_core_subset_pareto",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "The core C(e) is a subset of the Pareto-efficient allocations. Every allocation in the core is Pareto efficient, but not every Pareto-efficient allocation need be in the core.",
+      "proof": "C(e) ⊂ Pareto-efficient: by Claim_5.2_core_pareto_efficient (or Claim_5.1_d: unblocked implies Pareto efficient). The converse fails in general because a Pareto-efficient allocation may still be blocked by a proper sub-coalition acting on its own endowments, even if the grand coalition cannot improve on it.",
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.3_core",
+        "Def_5.1_pareto_efficient",
+        "Claim_5.1_d"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit from the structure of the definitions: C(e) is defined by unblockedness against all coalitions, which is stronger than Pareto efficiency (unblockedness against only the grand coalition).",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Claim_5.2_income_endowment_dependence",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "In the exchange economy, consumer i's income m^i = p · e^i depends on prices p through the market value of the endowment. This distinguishes the exchange economy from the standard consumer problem with exogenous income: income is endogenous and varies with prices.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_consumer_problem",
+        "Implicit_Def_5.0_endowment"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit throughout Section 5.2; the notation x^i(p, p·e^i) signals that income is endowment-valued.",
+      "notation_in_scope": {
+        "m^i = p · e^i": "endowment income of consumer i"
+      }
+    },
+    {
+      "id": "Implicit_Claim_5.2_positive_endowments",
+      "type": "implicit_assumption",
+      "role": "implicit_assumption",
+      "statement": "The condition Σ_{i=1}^I e^i ≫ 0 (aggregate endowment strictly positive in every good) is needed for condition 3 of Theorem 5.3 to hold. If some good has zero aggregate endowment, the argument for unboundedness of demand breaks down and a Walrasian equilibrium may not exist (or the good simply doesn't exist in the economy).",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Thm_5.4_utility_implies_conditions"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "The aggregate endowment positivity condition appears explicitly in Theorems 5.4 and 5.5.",
+      "notation_in_scope": {
+        "Σ e^i ≫ 0": "all components of aggregate endowment are strictly positive"
+      }
+    },
+    {
+      "id": "Implicit_Claim_5.2_normalization",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "Because z(p) is homogeneous of degree zero, one price can be normalised without loss of generality. The standard normalisation used in the proof of Theorem 5.3 is Σ_{k=1}^n p_k = 1 (unit simplex normalisation). Any other positive normalisation (e.g., setting p_n = 1) is equivalent.",
+      "proof": null,
+      "proof_sketch": "By homogeneity, z(λp) = z(p); so replacing p by p/Σ_k p_k (normalising to the simplex) gives an equivalent problem. The equilibrium condition z(p*) = 0 is invariant under this normalisation.",
+      "dependencies": [
+        "Thm_5.2_excess_demand_properties",
+        "Thm_5.3_existence_fixed_point"
+      ],
+      "section": "5.2.1",
+      "labeled": false,
+      "context": "Implicit in the proof of Theorem 5.3 where prices are normalised to the simplex S_ε.",
+      "notation_in_scope": {
+        "Σ p_k = 1": "simplex normalisation"
+      }
+    },
+    {
+      "id": "Implicit_Def_5.0_pareto_improvement",
+      "type": "definition",
+      "role": "definition",
+      "statement": "A Pareto improvement from allocation x is a feasible allocation y ∈ F(e) such that y^i ≿^i x^i for all i ∈ I with at least one strict preference. An allocation is Pareto efficient if and only if no Pareto improvement from it exists.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.1_pareto_efficient",
+        "Def_5.1_feasible_allocations"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit in Definition 5.1 and the surrounding discussion.",
+      "notation_in_scope": {}
+    },
+    {
+      "id": "Implicit_Claim_5.1_blocking_implies_not_pareto",
+      "type": "claim",
+      "role": "claimed_result",
+      "statement": "If a coalition S blocks x ∈ F(e), then x is not 'coalition-Pareto-optimal' for S: members of S can all do at least as well and some strictly better by trading only among themselves. However, blocking by a proper coalition S ⊊ I is strictly stronger than blocking by the grand coalition: the coalition must balance using only its own endowments.",
+      "proof": null,
+      "proof_sketch": null,
+      "dependencies": [
+        "Def_5.2_blocking_coalition",
+        "Def_5.1_pareto_efficient"
+      ],
+      "section": "5.1",
+      "labeled": false,
+      "context": "Implicit in the structure of Definition 5.2 and the note that follows it.",
+      "notation_in_scope": {}
+    }
+  ]
+}

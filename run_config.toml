@@ -1,0 +1,50 @@
+# LeanKnowledge — Model Configuration
+#
+# This file controls which models are used for each pipeline agent/tier.
+# Environment variables (LK_*) override values here.
+# Pass a different config with: leanknowledge run --config other_config.toml
+
+[models]
+# Agent 1: Extraction (PDF → structured claims)
+extraction = "cli/claude"
+
+# Agent 2: Claim Extraction (ensemble)
+claim_fast_a = "anthropic/claude-sonnet-4-20250514"   # Sonnet leg
+claim_fast_b = "openai/Goedel-LM/Goedel-Prover-V2-8B" # DeepSeek/Goedel leg
+claim_arbiter = "anthropic/claude-sonnet-4-20250514"   # Arbiter on disagreement
+
+# Agent 7: Failure Analyst
+failure_analyst = "anthropic/claude-sonnet-4-20250514"
+
+[translator]
+# Direct phase (no plan, fast)
+direct_model = "deepseek/deepseek-reasoner"
+direct_attempts = 3
+
+# Tier 1: primary prover
+tier1_model = "deepseek/deepseek-reasoner"
+tier1_attempts = 7
+
+# Tier 2: escalation
+tier2_model = "gemini/gemini-2.5-pro"
+tier2_attempts = 5
+
+# Tier 3: decompose into sub-lemmas
+tier3_enabled = true
+tier3_model = "gemini/gemini-2.5-pro"       # decomposer
+tier3_prover = "gemini/gemini-2.5-pro"       # sub-lemma prover
+tier3_attempts = 3
+
+# Oracle (disabled by default — last resort for hard theorems)
+oracle_enabled = false
+oracle_model = "anthropic/claude-sonnet-4-20250514"
+oracle_attempts = 5
+
+# Definitions (simpler path)
+definition_model = "deepseek/deepseek-reasoner"
+definition_escalation_model = "gemini/gemini-2.5-pro"
+definition_attempts = 6
+
+[cli]
+claude = "claude"
+gemini = "gemini"

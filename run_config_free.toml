@@ -1,0 +1,33 @@
+# LeanKnowledge — Free CLI Configuration
+#
+# Uses Claude/Gemini CLI subscriptions instead of API credits.
+# Zero marginal cost per run.
+
+[models]
+extraction = "cli/claude"
+claim_fast_a = "cli/claude"
+claim_fast_b = "cli/gemini"
+claim_arbiter = "cli/claude"
+failure_analyst = "cli/claude"
+
+[translator]
+direct_model = "cli/gemini"
+direct_attempts = 3
+tier1_model = "cli/gemini"
+tier1_attempts = 7
+tier2_model = "cli/claude"
+tier2_attempts = 5
+tier3_enabled = true
+tier3_model = "cli/claude"
+tier3_prover = "cli/claude"
+tier3_attempts = 3
+oracle_enabled = false
+oracle_model = "cli/claude"
+oracle_attempts = 5
+definition_model = "cli/gemini"
+definition_escalation_model = "cli/claude"
+definition_attempts = 6
+
+[cli]
+claude = "claude"
+gemini = "gemini"
